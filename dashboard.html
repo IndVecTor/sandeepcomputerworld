@@ -23,7 +23,7 @@
           <li><a href="#" onclick="logoutUser()" class="btn-login-nav">Logout</a></li>
         </ul>
         <div class="topbar-controls">
-          <button id="themeToggleBtn" class="control-btn" onclick="toggleTheme()">🌙 Dark</button>
+          <button id="themeToggleBtn" type="button" class="control-btn" onclick="toggleTheme()">🌙 Dark</button>
         </div>
       </nav>
     </div>
@@ -65,13 +65,11 @@
           </div>
         </div>
 
-        <!-- GSTIN Input (Only shows when GST is checked) -->
         <div id="gstNumberBox" class="form-group" style="display: none; max-width: 350px;">
           <label>Shop GSTIN Number (बिल पर दिखेगा)</label>
           <input type="text" id="shopGstin" class="form-control" placeholder="जैसे: 09XXXXX1234X1Z5" oninput="updateBillPreview()" />
         </div>
 
-        <!-- Customer Details -->
         <div class="grid-3" style="margin-bottom: 1rem;">
           <div class="form-group">
             <label>ग्राहक का नाम (Customer Name)*</label>
@@ -87,7 +85,6 @@
           </div>
         </div>
 
-        <!-- Items Entry -->
         <h4 style="margin-bottom: 0.5rem;">सामान / सर्विस का विवरण जोड़ें:</h4>
         <div id="itemsContainer"></div>
         <button type="button" onclick="addItemRow()" class="btn btn-accent" style="margin-top: 0.5rem;">+ नया आइटम / सर्विस जोड़ें</button>
@@ -147,7 +144,6 @@
               <td style="padding: 5px;">Discount:</td>
               <td style="padding: 5px; text-align: right;">- ₹ <span id="prevDiscount">0.00</span></td>
             </tr>
-            <!-- GST Row (Automatically hides when unchecked) -->
             <tr id="prevGstRow" style="display: none; color: #0b3c8a; font-weight: 600;">
               <td style="padding: 5px;">GST (<span id="prevGstRate">18</span>%):</td>
               <td style="padding: 5px; text-align: right;">+ ₹ <span id="prevGstAmount">0.00</span></td>
@@ -171,160 +167,14 @@
         </div>
       </div>
 
-      <!-- Print & Share Buttons -->
       <div class="no-print" style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-        <button onclick="printInvoice()" class="btn btn-primary">🖨️ Print Bill / Save PDF</button>
-        <button onclick="sendBillOnWhatsApp()" class="btn btn-whatsapp">📲 ग्राहक को WhatsApp पर बिल भेजें</button>
+        <button type="button" onclick="printInvoice()" class="btn btn-primary">🖨️ Print Bill / Save PDF</button>
+        <button type="button" onclick="sendBillOnWhatsApp()" class="btn btn-whatsapp">📲 ग्राहक को WhatsApp पर बिल भेजें</button>
       </div>
     </div>
 
   </section>
 
-  <script src="js/app.js"></script>
-  <script>
-    // Check Auth Role using localStorage
-    const role = localStorage.getItem("scw_auth_role");
-    if (!role) {
-      window.location.href = "login.html";
-    }
-
-    if (role === "superadmin") {
-      document.getElementById("superAdminSection").style.display = "block";
-      document.getElementById("roleBadge").innerText = "Super Admin & Billing Panel";
-      const currentSocials = getSocialConfig();
-      document.getElementById("adminFbUrl").value = currentSocials.facebook;
-      document.getElementById("adminIgUrl").value = currentSocials.instagram;
-    } else {
-      document.getElementById("roleBadge").innerText = "Shop Owner Billing Panel (Sandeep Yadav)";
-    }
-
-    // Save Social Links (Super Admin)
-    function saveSocialLinks(e) {
-      e.preventDefault();
-      const fb = document.getElementById("adminFbUrl").value.trim();
-      const ig = document.getElementById("adminIgUrl").value.trim();
-      localStorage.setItem("scw_social_links", JSON.stringify({ facebook: fb, instagram: ig }));
-      alert("✅ Facebook और Instagram लिंक मुख्य वेबसाइट पर अपडेट हो गए हैं!");
-    }
-
-    // Billing System Initialization
-    let billCounter = localStorage.getItem("scw_bill_counter") || 1001;
-    document.getElementById("prevBillNo").innerText = "SCW-" + billCounter;
-    document.getElementById("prevDate").innerText = new Date().toLocaleDateString("hi-IN");
-
-    function addItemRow(desc = "", qty = 1, rate = 0) {
-      const container = document.getElementById("itemsContainer");
-      const row = document.createElement("div");
-      row.className = "item-row";
-      row.style.cssText = "display: grid; grid-template-columns: 2fr 0.7fr 1fr auto; gap: 10px; margin-bottom: 10px;";
-      row.innerHTML = `
-        <input type="text" class="form-control item-desc" placeholder="आइटम या सर्विस का नाम (जैसे: Laptop Screen / CCTV Setup)" value="${desc}" oninput="updateBillPreview()" />
-        <input type="number" class="form-control item-qty" placeholder="Qty" value="${qty}" min="1" oninput="updateBillPreview()" />
-        <input type="number" class="form-control item-rate" placeholder="Rate ₹" value="${rate}" min="0" oninput="updateBillPreview()" />
-        <button type="button" class="btn btn-danger" onclick="this.parentElement.remove(); updateBillPreview();" style="padding: 0.5rem 0.8rem;">✕</button>
-      `;
-      container.appendChild(row);
-      updateBillPreview();
-    }
-
-    // Add 1 default row
-    addItemRow("Laptop / Computer Service", 1, 500);
-
-    function updateBillPreview() {
-      // Customer Info
-      document.getElementById("prevCustName").innerText = document.getElementById("custName").value || "______________________";
-      document.getElementById("prevCustPhone").innerText = document.getElementById("custPhone").value || "______________";
-      document.getElementById("prevCustAddress").innerText = document.getElementById("custAddress").value || "______________________";
-
-      // Items Calculation
-      const rows = document.querySelectorAll(".item-row");
-      const tbody = document.getElementById("prevItemsBody");
-      tbody.innerHTML = "";
-      let subTotal = 0;
-
-      rows.forEach((row, index) => {
-        const desc = row.querySelector(".item-desc").value || "Item " + (index + 1);
-        const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
-        const rate = parseFloat(row.querySelector(".item-rate").value) || 0;
-        const amount = qty * rate;
-        subTotal += amount;
-
-        tbody.innerHTML += `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${desc}</td>
-            <td>${qty}</td>
-            <td>₹ ${rate.toFixed(2)}</td>
-            <td>₹ ${amount.toFixed(2)}</td>
-          </tr>
-        `;
-      });
-
-      const discount = parseFloat(document.getElementById("billDiscount").value) || 0;
-      const taxableAmount = Math.max(0, subTotal - discount);
-
-      document.getElementById("prevSubTotal").innerText = subTotal.toFixed(2);
-      if (discount > 0) {
-        document.getElementById("prevDiscountRow").style.display = "table-row";
-        document.getElementById("prevDiscount").innerText = discount.toFixed(2);
-      } else {
-        document.getElementById("prevDiscountRow").style.display = "none";
-      }
-
-      // GST Toggle Logic (Show ONLY when checked, completely hide when unchecked)
-      const isGstApplied = document.getElementById("gstToggle").checked;
-      const gstPercent = parseFloat(document.getElementById("gstPercent").value) || 0;
-      let gstAmount = 0;
-
-      if (isGstApplied) {
-        document.getElementById("gstNumberBox").style.display = "block";
-        document.getElementById("prevGstRow").style.display = "table-row";
-        document.getElementById("invoiceTypeTitle").innerText = "TAX INVOICE (GST)";
-        
-        const gstinVal = document.getElementById("shopGstin").value.trim();
-        if (gstinVal) {
-          document.getElementById("printGstinRow").style.display = "block";
-          document.getElementById("prevGstin").innerText = gstinVal;
-        } else {
-          document.getElementById("printGstinRow").style.display = "none";
-        }
-
-        gstAmount = (taxableAmount * gstPercent) / 100;
-        document.getElementById("prevGstRate").innerText = gstPercent;
-        document.getElementById("prevGstAmount").innerText = gstAmount.toFixed(2);
-      } else {
-        document.getElementById("gstNumberBox").style.display = "none";
-        document.getElementById("prevGstRow").style.display = "none";
-        document.getElementById("printGstinRow").style.display = "none";
-        document.getElementById("invoiceTypeTitle").innerText = "CASH MEMO / INVOICE";
-      }
-
-      const grandTotal = taxableAmount + gstAmount;
-      document.getElementById("prevGrandTotal").innerText = grandTotal.toFixed(2);
-    }
-
-    function printInvoice() {
-      billCounter++;
-      localStorage.setItem("scw_bill_counter", billCounter);
-      window.print();
-      document.getElementById("prevBillNo").innerText = "SCW-" + billCounter;
-    }
-
-    function sendBillOnWhatsApp() {
-      const custName = document.getElementById("custName").value || "Customer";
-      const custPhone = document.getElementById("custPhone").value.replace(/\D/g, "");
-      const billNo = document.getElementById("prevBillNo").innerText;
-      const total = document.getElementById("prevGrandTotal").innerText;
-
-      if (custPhone.length < 10) {
-        alert("कृपया ग्राहक का 10 अंकों का सही मोबाइल नंबर डालें!");
-        return;
-      }
-
-      const waNumber = custPhone.length === 10 ? "91" + custPhone : custPhone;
-      const msg = `*SANDEEP COMPUTER WORLD* (जीयनपुर, आज़मगढ़)%0A%0Aनमस्ते *${encodeURIComponent(custName)}* जी,%0Aआपका बिल जनरेट हो गया है:%0A🧾 *Bill No:* ${billNo}%0A💰 *कुल राशि (Total):* ₹${total}%0A%0Aधन्यवाद!%0A- संदीप यादव (7388245758)`;
-      window.open(`https://wa.me/${waNumber}?text=${msg}`, "_blank");
-    }
-  </script>
+  <script src="css/script.js"></script>
 </body>
 </html>

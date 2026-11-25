@@ -1,218 +1,71 @@
-const OWNER_PHONE = "7388245758";
-const OWNER_WA = "917388245758";
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Official Login | Sandeep Computer World</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
 
-// 1. Unique SVG Logo Generator (Fixes duplicate ID rendering issue)
-function generateLogoSVG(uid) {
-  return `
-  <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="display:block;">
-    <defs>
-      <radialGradient id="bgGrad_${uid}" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#1e40af"/>
-        <stop offset="100%" stop-color="#062559"/>
-      </radialGradient>
-      <path id="topArc_${uid}" d="M 38,150 A 112,112 0 1,1 262,150" />
-      <path id="bottomArc_${uid}" d="M 32,155 A 118,118 0 0,0 268,155" />
-    </defs>
-    <circle cx="150" cy="150" r="145" fill="url(#bgGrad_${uid})" stroke="#facc15" stroke-width="8"/>
-    <circle cx="150" cy="150" r="102" fill="#071e46" stroke="#facc15" stroke-width="3"/>
-    <text fill="#ffffff" font-size="20.5" font-weight="900" letter-spacing="1.4">
-      <textPath href="#topArc_${uid}" startOffset="50%" text-anchor="middle">SANDEEP COMPUTER WORLD</textPath>
-    </text>
-    <text fill="#facc15" font-size="14" font-weight="800" letter-spacing="1">
-      <textPath href="#bottomArc_${uid}" startOffset="50%" text-anchor="middle">LAPTOP, COMPUTER &amp; CCTV SERVICES</textPath>
-    </text>
-    <text x="150" y="76" fill="#facc15" font-size="13" font-weight="700" text-anchor="middle">जीयनपुर, आज़मगढ़</text>
-    <text x="150" y="92" fill="#93c5fd" font-size="10" font-weight="700" text-anchor="middle">JIYANPUR, AZAMGARH</text>
-    <rect x="75" y="112" width="68" height="46" rx="4" fill="#38bdf8" stroke="#fff" stroke-width="2.5"/>
-    <rect x="81" y="118" width="56" height="34" fill="#0f172a"/>
-    <rect x="103" y="158" width="12" height="10" fill="#cbd5e1"/>
-    <rect x="93" y="168" width="32" height="4" rx="2" fill="#facc15"/>
-    <g transform="translate(158, 114)">
-      <rect x="0" y="6" width="48" height="22" rx="4" fill="#f8fafc" stroke="#0f172a" stroke-width="2"/>
-      <circle cx="48" cy="17" r="9" fill="#1e293b" stroke="#facc15" stroke-width="2"/>
-      <circle cx="48" cy="17" r="4" fill="#38bdf8"/>
-      <path d="M18,28 L18,42 L34,42" fill="none" stroke="#cbd5e1" stroke-width="3"/>
-    </g>
-    <rect x="115" y="156" width="66" height="40" rx="3" fill="#e2e8f0" stroke="#0f172a" stroke-width="2"/>
-    <rect x="120" y="161" width="56" height="30" fill="#1d4ed8"/>
-    <polygon points="105,196 191,196 198,203 98,203" fill="#facc15"/>
-    <circle cx="28" cy="150" r="5" fill="#dc2626"/>
-    <circle cx="272" cy="150" r="5" fill="#dc2626"/>
-  </svg>`;
-}
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-logo-box inject-logo"></div>
+        <div class="brand-text">
+          <h1>SANDEEP COMPUTER WORLD</h1>
+          <span>Official Staff &amp; Admin Portal</span>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="index.html">← वापस Home पर जाएं</a></li>
+        </ul>
+        <div class="topbar-controls">
+          <button id="themeToggleBtn" type="button" class="control-btn" onclick="toggleTheme()">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </header>
 
-// 2. Dictionary for Hindi & English Bilingual Switch
-const TRANSLATIONS = {
-  hi: {
-    nav_home: "होम (Home)",
-    nav_services: "सेवाएं (Services)",
-    nav_about: "हमारे बारे में",
-    nav_contact: "संपर्क करें",
-    nav_login: "ऑफिशियल लॉगिन",
-    hero_badge: "📍 जीयनपुर, आज़मगढ़ का भरोसेमंद टेक सेंटर",
-    hero_title: "कंप्यूटर, लैपटॉप रिपेयरिंग और <span>CCTV कैमरा</span> की संपूर्ण सेवा",
-    hero_desc: "प्रो. संदीप यादव द्वारा संचालित — घर, दुकान, ऑफिस और सोसाइटी के लिए तेज़ रिपेयरिंग और आधुनिक सिक्योरिटी कैमरा इंस्टॉलेशन।",
-    btn_call: "📞 कॉल करें: 7388245758",
-    btn_wa: "💬 Direct WhatsApp",
-    sec_services_title: "हमारी प्रमुख सेवाएं (Our Services)",
-    sec_services_sub: "सभी प्रकार के हार्डवेयर, सॉफ्टवेयर और सिक्योरिटी समाधान एक ही छत के नीचे",
-    card1_title: "💻 लैपटॉप रिपेयरिंग",
-    card1_desc: "सभी कंपनियों के लैपटॉप की चिप-लेवल और पार्ट रिपेयरिंग की जाती है।",
-    card2_title: "🖥️ कंप्यूटर व सॉफ्टवेयर",
-    card2_desc: "नए डेस्कटॉप असेंबलिंग से लेकर सभी सॉफ्टवेयर समस्याओं का समाधान।",
-    card3_title: "📹 CCTV कैमरा इंस्टॉलेशन",
-    card3_desc: "अपने घर, दुकान और ऑफिस को 24x7 सुरक्षित रखें।",
-    btn_all_services: "सभी सेवाएं विस्तार से देखें →",
-    wa_box_title: "💬 सीधे संदीप यादव जी को WhatsApp मैसेज भेजें",
-    wa_box_sub: "अपनी समस्या लिखें और सीधे WhatsApp पर तुरंत जवाब पाएं",
-    btn_send_wa: "WhatsApp पर मैसेज भेजें ➤",
-    about_title: "Sandeep Computer World के बारे में",
-    contact_title: "हमसे संपर्क करें (Contact Us)",
-    contact_sub: "किसी भी पूछताछ या सर्विस बुकिंग के लिए सीधे कॉल या व्हाट्सएप करें"
-  },
-  en: {
-    nav_home: "Home",
-    nav_services: "Services",
-    nav_about: "About Us",
-    nav_contact: "Contact",
-    nav_login: "Official Login",
-    hero_badge: "📍 Trusted Tech & Security Center in Jiyanpur, Azamgarh",
-    hero_title: "Complete Computer, Laptop Repair & <span>CCTV Camera</span> Services",
-    hero_desc: "Managed by Prop. Sandeep Yadav — Fast chip-level repair and modern security camera installation for homes, shops, and offices.",
-    btn_call: "📞 Call Now: 7388245758",
-    btn_wa: "💬 Direct WhatsApp",
-    sec_services_title: "Our Core Services",
-    sec_services_sub: "Complete hardware, software, and security solutions under one roof",
-    card1_title: "💻 Laptop Repairing",
-    card1_desc: "Chip-level motherboard and spare part repair for all laptop brands.",
-    card2_title: "🖥️ Computer & Software",
-    card2_desc: "New desktop assembling and complete Windows & software solutions.",
-    card3_title: "📹 CCTV Camera Installation",
-    card3_desc: "Keep your home, shop, and office secure 24x7 with HD & IP cameras.",
-    btn_all_services: "Explore All Services →",
-    wa_box_title: "💬 Send Direct WhatsApp Message to Sandeep Yadav",
-    wa_box_sub: "Describe your issue and get an instant reply on WhatsApp",
-    btn_send_wa: "Send Message on WhatsApp ➤",
-    about_title: "About Sandeep Computer World",
-    contact_title: "Contact Us",
-    contact_sub: "Call or WhatsApp directly for any inquiry or service booking"
-  }
-};
+  <section class="section">
+    <div class="card" style="max-width: 450px; margin: 1rem auto;">
+      <div style="width: 100px; height: 100px; margin: 0 auto 1rem;" class="inject-logo"></div>
+      <h2 style="text-align: center; margin-bottom: 0.5rem;">Official Login</h2>
+      <p style="text-align: center; color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
+        बिलिंग सिस्टम और एडमिन कंट्रोल के लिए लॉगिन करें
+      </p>
 
-// Initialize Page: Logo, Theme, Language & Socials
-document.addEventListener("DOMContentLoaded", () => {
-  // Inject Unique Logos
-  document.querySelectorAll(".inject-logo").forEach((el, idx) => {
-    el.innerHTML = generateLogoSVG("scw_" + idx);
-  });
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>लॉगिन प्रकार चुनें (Select Role)</label>
+          <select id="loginRole" class="form-control">
+            <option value="owner">Shop Owner (संदीप यादव - Billing Panel)</option>
+            <option value="superadmin">Super Admin (Social Links &amp; Site Control)</option>
+          </select>
+        </div>
 
-  // Apply Saved Theme
-  const savedTheme = localStorage.getItem("scw_theme") || "light";
-  applyTheme(savedTheme);
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="loginUser" class="form-control" placeholder="Username डालें" required />
+        </div>
 
-  // Apply Saved Language
-  const savedLang = localStorage.getItem("scw_lang") || "hi";
-  applyLanguage(savedLang);
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPass" class="form-control" placeholder="Password डालें" required />
+        </div>
 
-  // Render Social Links
-  renderSocialLinks();
-});
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">🔐 सुरक्षित लॉगिन करें</button>
+      </form>
 
-// Theme Switcher
-function toggleTheme() {
-  const isDark = document.body.classList.contains("dark-theme");
-  const nextTheme = isDark ? "light" : "dark";
-  localStorage.setItem("scw_theme", nextTheme);
-  applyTheme(nextTheme);
-}
+      <div style="margin-top: 1.5rem; padding: 0.75rem; background: rgba(148,163,184,0.15); border-radius: 6px; font-size: 0.85rem;">
+        <strong>लॉगिन आईडी और पासवर्ड:</strong><br>
+        • <b>Shop Owner:</b> User: <code>sandeep</code> | Pass: <code>sandeep123</code><br>
+        • <b>Super Admin:</b> User: <code>admin</code> | Pass: <code>admin123</code>
+      </div>
+    </div>
+  </section>
 
-function applyTheme(theme) {
-  const btn = document.getElementById("themeToggleBtn");
-  if (theme === "dark") {
-    document.body.classList.add("dark-theme");
-    if (btn) btn.innerText = "☀️ Light";
-  } else {
-    document.body.classList.remove("dark-theme");
-    if (btn) btn.innerText = "🌙 Dark";
-  }
-}
-
-// Language Switcher
-function toggleLanguage() {
-  const current = localStorage.getItem("scw_lang") || "hi";
-  const next = current === "hi" ? "en" : "hi";
-  localStorage.setItem("scw_lang", next);
-  applyLanguage(next);
-}
-
-function applyLanguage(lang) {
-  const btn = document.getElementById("langToggleBtn");
-  if (btn) btn.innerText = lang === "hi" ? "🌐 English" : "🌐 हिंदी";
-
-  const dict = TRANSLATIONS[lang];
-  if (!dict) return;
-
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.getAttribute("data-i18n");
-    if (dict[key]) {
-      el.innerHTML = dict[key];
-    }
-  });
-}
-
-// Social Links
-function getSocialConfig() {
-  const saved = localStorage.getItem("scw_social_links");
-  return saved ? JSON.parse(saved) : {
-    facebook: "https://facebook.com",
-    instagram: "https://instagram.com"
-  };
-}
-
-function renderSocialLinks() {
-  const config = getSocialConfig();
-  document.querySelectorAll(".dynamic-socials").forEach(box => {
-    let html = "";
-    if (config.facebook && config.facebook.trim() !== "") {
-      html += `<a href="${config.facebook}" target="_blank" class="social-btn fb-bg">📘 Facebook</a>`;
-    }
-    if (config.instagram && config.instagram.trim() !== "") {
-      html += `<a href="${config.instagram}" target="_blank" class="social-btn ig-bg">📸 Instagram</a>`;
-    }
-    box.innerHTML = html;
-  });
-}
-
-// Direct WhatsApp
-function sendWhatsAppMessage(event) {
-  if (event) event.preventDefault();
-  const name = document.getElementById("waName")?.value || "Customer";
-  const service = document.getElementById("waService")?.value || "General Inquiry";
-  const msg = document.getElementById("waMsg")?.value || "Hello Sandeep Ji, mujhe service chahiye.";
-
-  const text = `नमस्ते संदीप जी (Sandeep Computer World),%0A*नाम:* ${encodeURIComponent(name)}%0A*सर्विस:* ${encodeURIComponent(service)}%0A*संदेश:* ${encodeURIComponent(msg)}`;
-  window.open(`https://wa.me/${OWNER_WA}?text=${text}`, "_blank");
-}
-
-// Fixed Login Logic (Using localStorage so it works reliably across local files & Vercel)
-function handleLogin(event) {
-  event.preventDefault();
-  const role = document.getElementById("loginRole").value;
-  const user = document.getElementById("loginUser").value.trim().toLowerCase();
-  const pass = document.getElementById("loginPass").value.trim();
-
-  if (role === "owner" && user === "sandeep" && pass === "sandeep123") {
-    localStorage.setItem("scw_auth_role", "owner");
-    window.location.href = "dashboard.html";
-  } else if (role === "superadmin" && user === "admin" && pass === "admin123") {
-    localStorage.setItem("scw_auth_role", "superadmin");
-    window.location.href = "dashboard.html";
-  } else {
-    alert("❌ गलत यूज़रनेम या पासवर्ड! कृपया सही जानकारी डालें।\n\nOwner: sandeep / sandeep123\nAdmin: admin / admin123");
-  }
-}
-
-function logoutUser() {
-  localStorage.removeItem("scw_auth_role");
-  window.location.href = "login.html";
-}
+  <script src="css/script.js"></script>
+</body>
+</html>
