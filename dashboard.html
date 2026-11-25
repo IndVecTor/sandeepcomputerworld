@@ -3,177 +3,451 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | Sandeep Computer World</title>
+  <title>ERP &amp; Billing Dashboard | Sandeep Computer World</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <header class="no-print">
-    <div class="nav-container">
-      <a href="index.html" class="brand">
-        <div class="brand-logo-box inject-logo"></div>
-        <div class="brand-text">
-          <h1>SANDEEP COMPUTER WORLD</h1>
-          <span id="roleBadge">Official Dashboard</span>
-        </div>
-      </a>
-      <nav>
-        <ul>
-          <li><a href="index.html" target="_blank">🌐 Live Site देखें</a></li>
-          <li><a href="#" onclick="logoutUser()" class="btn-login-nav">Logout</a></li>
-        </ul>
-        <div class="topbar-controls">
-          <button id="themeToggleBtn" type="button" class="control-btn" onclick="toggleTheme()">🌙 Dark</button>
-        </div>
-      </nav>
-    </div>
-  </header>
+  <div id="erpWrapper" class="erp-wrapper">
 
-  <section class="section">
-
-    <!-- ==================== SUPER ADMIN PANEL ==================== -->
-    <div id="superAdminSection" class="card no-print" style="display: none; max-width: 750px; margin: 0 auto 2rem; border: 2px solid #2563eb;">
-      <h2 style="margin-bottom: 0.5rem;">⚙️ Super Admin Control Panel</h2>
-      <p style="color: var(--muted); margin-bottom: 1.25rem;">यहाँ से आप मुख्य वेबसाइट पर दिखने वाले Facebook और Instagram प्रोफाइल लिंक अपडेट कर सकते हैं। (अगर कोई लिंक खाली छोड़ेंगे तो वह वेबसाइट से छिप जाएगा)।</p>
-
-      <form onsubmit="saveSocialLinks(event)">
-        <div class="form-group">
-          <label>📘 Facebook Profile / Page URL</label>
-          <input type="url" id="adminFbUrl" class="form-control" placeholder="https://facebook.com/sandeepcomputerworld" />
-        </div>
-        <div class="form-group">
-          <label>📸 Instagram Profile URL</label>
-          <input type="url" id="adminIgUrl" class="form-control" placeholder="https://instagram.com/sandeepcomputerworld" />
-        </div>
-        <button type="submit" class="btn btn-primary">💾 Save &amp; Update on Main Site</button>
-      </form>
-    </div>
-
-    <!-- ==================== SHOP OWNER BILLING SYSTEM ==================== -->
-    <div id="billingSection">
-      <div class="card no-print">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
-          <div>
-            <h2>🧾 ऑनलाइन बिलिंग सिस्टम (Invoice Generator)</h2>
-            <p style="color: var(--muted);">ग्राहक का बिल बनाएं, GST जोड़ें या हटाएं, और सीधे प्रिंट निकालें</p>
-          </div>
-          <!-- GST ON/OFF TOGGLE -->
-          <div style="background: #fef9c3; color: #0f172a; border: 1px solid #facc15; padding: 0.75rem 1rem; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
-            <input type="checkbox" id="gstToggle" onchange="updateBillPreview()" style="width: 20px; height: 20px; cursor: pointer;" />
-            <label for="gstToggle" style="font-weight: 700; cursor: pointer; margin: 0;">बिल में GST जोड़ें (Include GST)</label>
-            <input type="number" id="gstPercent" value="18" min="0" max="28" onchange="updateBillPreview()" style="width: 60px; padding: 4px; border-radius: 4px; border: 1px solid #ccc; color: #0f172a; background: #fff;" title="GST %" />%
-          </div>
-        </div>
-
-        <div id="gstNumberBox" class="form-group" style="display: none; max-width: 350px;">
-          <label>Shop GSTIN Number (बिल पर दिखेगा)</label>
-          <input type="text" id="shopGstin" class="form-control" placeholder="जैसे: 09XXXXX1234X1Z5" oninput="updateBillPreview()" />
-        </div>
-
-        <div class="grid-3" style="margin-bottom: 1rem;">
-          <div class="form-group">
-            <label>ग्राहक का नाम (Customer Name)*</label>
-            <input type="text" id="custName" class="form-control" placeholder="ग्राहक का नाम लिखें" oninput="updateBillPreview()" />
-          </div>
-          <div class="form-group">
-            <label>मोबाइल नंबर (Mobile Number)</label>
-            <input type="text" id="custPhone" class="form-control" placeholder="ग्राहक का नंबर" oninput="updateBillPreview()" />
-          </div>
-          <div class="form-group">
-            <label>पता (Address)</label>
-            <input type="text" id="custAddress" class="form-control" placeholder="गाँव / शहर" oninput="updateBillPreview()" />
-          </div>
-        </div>
-
-        <h4 style="margin-bottom: 0.5rem;">सामान / सर्विस का विवरण जोड़ें:</h4>
-        <div id="itemsContainer"></div>
-        <button type="button" onclick="addItemRow()" class="btn btn-accent" style="margin-top: 0.5rem;">+ नया आइटम / सर्विस जोड़ें</button>
-
-        <div class="grid-3" style="margin-top: 1.5rem; max-width: 500px;">
-          <div class="form-group">
-            <label>डिस्काउंट (Discount ₹)</label>
-            <input type="number" id="billDiscount" class="form-control" value="0" min="0" oninput="updateBillPreview()" />
-          </div>
+    <!-- ==================== LEFT SIDEBAR ==================== -->
+    <aside id="erpSidebar" class="erp-sidebar no-print">
+      <div class="sidebar-brand">
+        <div style="width: 44px; height: 44px; flex-shrink: 0;" class="inject-logo"></div>
+        <div>
+          <h3 style="color: var(--accent); font-size: 0.95rem; line-height: 1.2;">SANDEEP COMPUTER</h3>
+          <span style="font-size: 0.72rem; color: #cbd5e1;">Jiyanpur, Azamgarh</span>
         </div>
       </div>
 
-      <!-- ==================== PRINTABLE INVOICE PREVIEW ==================== -->
-      <div id="printableInvoice" class="invoice-preview-box">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #062559; padding-bottom: 1rem; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-          <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="width: 75px; height: 75px;" class="inject-logo"></div>
-            <div>
-              <h1 style="color: #062559; font-size: 1.55rem; margin: 0;">SANDEEP COMPUTER WORLD</h1>
-              <p style="margin: 2px 0; font-weight: 600; color: #0f172a;">कंप्यूटर, लैपटॉप रिपेयरिंग व CCTV कैमरा इंस्टॉलेशन सेंटर</p>
-              <p style="margin: 2px 0; font-size: 0.9rem; color: #334155;">📍 जीयनपुर, आज़मगढ़ (उ.प्र.) | 📞 7388245758 (प्रो. संदीप यादव)</p>
-              <p id="printGstinRow" style="display: none; margin: 2px 0; font-size: 0.9rem; font-weight: 700; color: #0b3c8a;">GSTIN: <span id="prevGstin"></span></p>
+      <ul class="sidebar-menu">
+        <li><button class="sidebar-btn active" onclick="switchTab('tab-overview', this)">📊 Dashboard Overview</button></li>
+        <li><button id="navCreateBill" class="sidebar-btn" onclick="switchTab('tab-create-bill', this)">🧾 Create A4 Bill</button></li>
+        <li><button class="sidebar-btn" onclick="switchTab('tab-bills', this)">📂 All Bills (Date Filter)</button></li>
+        <li><button class="sidebar-btn" onclick="switchTab('tab-customers', this)">👥 Saved Customers</button></li>
+        <li><button class="sidebar-btn" onclick="switchTab('tab-repairs', this)">🔧 Repairing Job Sheet</button></li>
+        <li><button class="sidebar-btn" onclick="switchTab('tab-stock', this)">📦 Stock &amp; Rate List</button></li>
+        <li><button class="sidebar-btn" onclick="switchTab('tab-due', this)">💰 Due / Udhaar Khata</button></li>
+        <li id="superAdminNavItem" style="display: none;"><button class="sidebar-btn" onclick="switchTab('tab-superadmin', this)">⚙️ Super Admin Control</button></li>
+        <li style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.75rem;">
+          <button class="sidebar-btn" style="color: #fca5a5;" onclick="logoutUser()">🚪 Logout</button>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT AREA ==================== -->
+    <div class="erp-main">
+      <!-- Topbar -->
+      <div class="erp-topbar no-print">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button class="mobile-menu-btn" onclick="document.getElementById('erpSidebar').classList.toggle('open')">☰ Menu</button>
+          <strong id="roleBadge">Sandeep Computer World ERP</strong>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <a href="index.html" target="_blank" class="btn btn-primary btn-sm">🌐 Live Site</a>
+          <button id="themeToggleBtn" type="button" class="btn btn-accent btn-sm" onclick="toggleTheme()">🌙 Dark</button>
+        </div>
+      </div>
+
+      <div class="erp-content">
+
+        <!-- 1. OVERVIEW TAB -->
+        <div id="tab-overview" class="tab-panel active no-print">
+          <h2 style="margin-bottom: 1rem;">📊 बिज़नेस ओवरव्यू (Sandeep Computer World)</h2>
+          <div class="grid-4" style="margin-bottom: 1.5rem;">
+            <div class="stat-card" style="border-left-color: #16a34a;">
+              <h4>आज की कुल बिक्री (Today's Sales)</h4>
+              <div class="stat-val" id="statTodaySales">₹0.00</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #dc2626;">
+              <h4>कुल बकाया (Total Due)</h4>
+              <div class="stat-val" id="statTotalDue">₹0.00</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #2563eb;">
+              <h4>कुल बने हुए बिल (Total Bills)</h4>
+              <div class="stat-val" id="statTotalBills">0</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #eab308;">
+              <h4>पेंडिंग रिपेयरिंग व ग्राहक</h4>
+              <div class="stat-val" id="statPendingRepairs" style="font-size: 1.25rem;">0</div>
             </div>
           </div>
-          <div style="text-align: right;">
-            <h3 id="invoiceTypeTitle" style="background: #062559; color: #facc15; padding: 5px 12px; border-radius: 4px; display: inline-block;">CASH MEMO / INVOICE</h3>
-            <p style="margin-top: 6px; font-size: 0.9rem; color: #0f172a;"><strong>Bill No:</strong> <span id="prevBillNo">SCW-1001</span></p>
-            <p style="font-size: 0.9rem; color: #0f172a;"><strong>Date:</strong> <span id="prevDate"></span></p>
+
+          <div class="card">
+            <h3>⚡ क्विक एक्शन (Quick Actions)</h3>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+              <button class="btn btn-primary" onclick="switchTab('tab-create-bill', document.getElementById('navCreateBill'))">🧾 नया A4 बिल बनाएं</button>
+              <button class="btn btn-excel" onclick="exportBillsExcel()">📥 सभी बिल Excel में डाउनलोड करें</button>
+              <button class="btn btn-excel" onclick="exportCustomersExcel()">📥 सभी ग्राहक Excel में डाउनलोड करें</button>
+            </div>
           </div>
         </div>
 
-        <div style="background: #f8fafc; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border: 1px solid #e2e8f0; color: #0f172a;">
-          <p><strong>ग्राहक का नाम:</strong> <span id="prevCustName">______________________</span> &nbsp;&nbsp;|&nbsp;&nbsp; <strong>मोबाइल:</strong> <span id="prevCustPhone">______________</span></p>
-          <p style="margin-top: 4px;"><strong>पता:</strong> <span id="prevCustAddress">______________________</span></p>
-        </div>
+        <!-- 2. CREATE A4 BILL TAB -->
+        <div id="tab-create-bill" class="tab-panel">
+          <div class="card no-print">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+              <div>
+                <h2>🧾 नया A4 इनवॉइस बनाएं (A4 Billing System)</h2>
+                <p style="color: var(--muted); font-size: 0.9rem;">ग्राहक का डेटा एक बार सेव होने के बाद हमेशा के लिए ऑटो-सेव रहेगा</p>
+              </div>
+              <!-- GST ON/OFF TOGGLE -->
+              <div style="background: #fef9c3; color: #0f172a; border: 1px solid #facc15; padding: 0.6rem 0.9rem; border-radius: 8px; display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="gstToggle" onchange="updateBillPreview()" style="width: 19px; height: 19px; cursor: pointer;" />
+                <label for="gstToggle" style="font-weight: 700; cursor: pointer; margin: 0;">GST जोड़ें</label>
+                <input type="number" id="gstPercent" value="18" min="0" max="28" onchange="updateBillPreview()" style="width: 55px; padding: 3px; border-radius: 4px; border: 1px solid #ccc; color: #0f172a; background: #fff;" />%
+              </div>
+            </div>
 
-        <table class="bill-table">
-          <thead>
-            <tr>
-              <th style="width: 50px;">क्र.</th>
-              <th>सामान / सर्विस का विवरण (Description)</th>
-              <th style="width: 80px;">मात्रा (Qty)</th>
-              <th style="width: 110px;">रेट (Rate ₹)</th>
-              <th style="width: 120px;">कुल (Amount ₹)</th>
-            </tr>
-          </thead>
-          <tbody id="prevItemsBody"></tbody>
-        </table>
+            <div class="grid-3">
+              <div class="form-group">
+                <label>🔍 पुराने ग्राहक चुनें (Auto-Fill)</label>
+                <select id="savedCustSelect" class="form-control" onchange="fillSavedCustomer()"></select>
+              </div>
+              <div class="form-group">
+                <label>📅 बिल की तारीख (Bill Date)</label>
+                <input type="date" id="billDateInput" class="form-control" onchange="updateBillPreview()" />
+              </div>
+              <div id="gstNumberBox" class="form-group" style="display: none;">
+                <label>Shop GSTIN Number</label>
+                <input type="text" id="shopGstin" class="form-control" placeholder="09XXXXX1234X1Z5" oninput="updateBillPreview()" />
+              </div>
+            </div>
 
-        <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
-          <table style="width: 280px; border-collapse: collapse; color: #0f172a;">
-            <tr>
-              <td style="padding: 5px;"><strong>Sub Total:</strong></td>
-              <td style="padding: 5px; text-align: right;">₹ <span id="prevSubTotal">0.00</span></td>
-            </tr>
-            <tr id="prevDiscountRow" style="display: none;">
-              <td style="padding: 5px;">Discount:</td>
-              <td style="padding: 5px; text-align: right;">- ₹ <span id="prevDiscount">0.00</span></td>
-            </tr>
-            <tr id="prevGstRow" style="display: none; color: #0b3c8a; font-weight: 600;">
-              <td style="padding: 5px;">GST (<span id="prevGstRate">18</span>%):</td>
-              <td style="padding: 5px; text-align: right;">+ ₹ <span id="prevGstAmount">0.00</span></td>
-            </tr>
-            <tr style="border-top: 2px solid #062559; font-size: 1.15rem; background: #fef9c3;">
-              <td style="padding: 8px;"><strong>Grand Total:</strong></td>
-              <td style="padding: 8px; text-align: right;"><strong>₹ <span id="prevGrandTotal">0.00</span></strong></td>
-            </tr>
-          </table>
-        </div>
+            <div class="grid-3">
+              <div class="form-group">
+                <label>ग्राहक का नाम (Customer Name)*</label>
+                <input type="text" id="custName" class="form-control" placeholder="ग्राहक का नाम लिखें" oninput="updateBillPreview()" />
+              </div>
+              <div class="form-group">
+                <label>मोबाइल नंबर (Mobile Number)</label>
+                <input type="text" id="custPhone" class="form-control" placeholder="10 अंकों का नंबर" oninput="autoFillByPhone(); updateBillPreview();" />
+              </div>
+              <div class="form-group">
+                <label>पता (Address)</label>
+                <input type="text" id="custAddress" class="form-control" placeholder="गाँव / शहर" oninput="updateBillPreview()" />
+              </div>
+            </div>
 
-        <div style="display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 1rem; border-top: 1px dashed #94a3b8; font-size: 0.9rem; color: #0f172a;">
-          <div>
-            <p>नोट: बिका हुआ सामान वापस नहीं होगा। वारंटी कंपनी की शर्तों के अनुसार।</p>
-            <p style="margin-top: 4px; font-weight: 600;">धन्यवाद! फिर पधारें।</p>
+            <!-- Quick Stock Selector -->
+            <div class="form-group" style="max-width: 500px; margin-top: 0.5rem;">
+              <label>⚡ रेट लिस्ट से सीधे आइटम जोड़ें:</label>
+              <div style="display: flex; gap: 8px;">
+                <select id="quickStockSelect" class="form-control"></select>
+                <button type="button" class="btn btn-primary" onclick="addFromStockList()">Add</button>
+              </div>
+            </div>
+
+            <h4 style="margin: 1rem 0 0.5rem;">बिल के आइटम व सर्विस:</h4>
+            <div id="itemsContainer"></div>
+            <button type="button" onclick="addItemRow()" class="btn btn-accent btn-sm" style="margin-top: 0.4rem;">+ नया आइटम जोड़ें</button>
+
+            <!-- Payment Mode & Status Ticks (No Typing Needed) -->
+            <div class="grid-3" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+              <div class="form-group">
+                <label>💳 पेमेंट माध्यम (टिक करें):</label>
+                <div class="tick-group">
+                  <label class="tick-option"><input type="radio" name="payMode" value="Cash" checked onchange="updateBillPreview()" /> Cash</label>
+                  <label class="tick-option"><input type="radio" name="payMode" value="UPI (PhonePe/GPay/BharatPe)" onchange="updateBillPreview()" /> UPI (PhonePe / GPay / BharatPe)</label>
+                  <label class="tick-option"><input type="radio" name="payMode" value="Bank / Card" onchange="updateBillPreview()" /> Bank / Card</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>📌 पेमेंट स्थिति (टिक करें):</label>
+                <div class="tick-group">
+                  <label class="tick-option"><input type="radio" name="payStatus" value="Paid (पूरा जमा)" checked onchange="updateBillPreview()" /> Paid (पूरा जमा)</label>
+                  <label class="tick-option"><input type="radio" name="payStatus" value="Partial (आधा जमा)" onchange="updateBillPreview()" /> Partial (आधा जमा)</label>
+                  <label class="tick-option"><input type="radio" name="payStatus" value="Unpaid (उधार)" onchange="updateBillPreview()" /> Unpaid (उधार)</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>डिस्काउंट (Discount ₹)</label>
+                <input type="number" id="billDiscount" class="form-control" value="0" min="0" oninput="updateBillPreview()" />
+                <div id="partialPaidBox" style="display: none; margin-top: 8px;">
+                  <label>अभी जमा की गई राशि (Paid ₹):</label>
+                  <input type="number" id="paidAmountInput" class="form-control" value="0" min="0" oninput="updateBillPreview()" />
+                </div>
+              </div>
+            </div>
           </div>
-          <div style="text-align: center;">
-            <p style="margin-bottom: 25px;">हस्ताक्षर (Authorized Signatory)</p>
-            <strong>संदीप यादव (Sandeep Computer World)</strong>
+
+          <!-- ==================== A4 STANDARD INVOICE PREVIEW ==================== -->
+          <div id="printableInvoice" class="invoice-preview-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #062559; padding-bottom: 1rem; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="width: 75px; height: 75px;" class="inject-logo"></div>
+                <div>
+                  <h1 style="color: #062559; font-size: 1.55rem; margin: 0;">SANDEEP COMPUTER WORLD</h1>
+                  <p style="margin: 2px 0; font-weight: 600; color: #0f172a;">कंप्यूटर, लैपटॉप रिपेयरिंग व CCTV कैमरा इंस्टॉलेशन सेंटर</p>
+                  <p style="margin: 2px 0; font-size: 0.9rem; color: #334155;">📍 जीयनपुर, आज़मगढ़ (उ.प्र.) | 📞 7388245758 (प्रो. संदीप यादव)</p>
+                  <p id="printGstinRow" style="display: none; margin: 2px 0; font-size: 0.9rem; font-weight: 700; color: #0b3c8a;">GSTIN: <span id="prevGstin"></span></p>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <h3 id="invoiceTypeTitle" style="background: #062559; color: #facc15; padding: 5px 12px; border-radius: 4px; display: inline-block;">A4 CASH MEMO / INVOICE</h3>
+                <p style="margin-top: 6px; font-size: 0.9rem; color: #0f172a;"><strong>Bill No:</strong> <span id="prevBillNo">SCW-1001</span></p>
+                <p style="font-size: 0.9rem; color: #0f172a;"><strong>Date:</strong> <span id="prevDate"></span></p>
+              </div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border: 1px solid #cbd5e1; color: #0f172a; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <p><strong>ग्राहक का नाम:</strong> <span id="prevCustName">______________________</span></p>
+                <p style="margin-top: 4px;"><strong>मोबाइल:</strong> <span id="prevCustPhone">______________</span> &nbsp;|&nbsp; <strong>पता:</strong> <span id="prevCustAddress">______________________</span></p>
+              </div>
+              <div style="text-align: right;">
+                <p><strong>Payment Mode:</strong> <span id="prevPayMode">Cash</span></p>
+                <p style="margin-top: 4px;"><strong>Status:</strong> <span id="prevPayStatus">Paid (पूरा जमा)</span></p>
+              </div>
+            </div>
+
+            <table class="bill-table">
+              <thead>
+                <tr>
+                  <th style="width: 45px;">क्र.</th>
+                  <th>सामान / सर्विस का विवरण (Description)</th>
+                  <th style="width: 110px;">वारंटी (Warranty)</th>
+                  <th style="width: 70px;">मात्रा</th>
+                  <th style="width: 105px;">रेट (Rate ₹)</th>
+                  <th style="width: 115px;">कुल (Amount ₹)</th>
+                </tr>
+              </thead>
+              <tbody id="prevItemsBody"></tbody>
+            </table>
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+              <table style="width: 300px; border-collapse: collapse; color: #0f172a;">
+                <tr>
+                  <td style="padding: 5px;"><strong>Sub Total:</strong></td>
+                  <td style="padding: 5px; text-align: right;">₹ <span id="prevSubTotal">0.00</span></td>
+                </tr>
+                <tr id="prevDiscountRow" style="display: none;">
+                  <td style="padding: 5px;">Discount:</td>
+                  <td style="padding: 5px; text-align: right;">- ₹ <span id="prevDiscount">0.00</span></td>
+                </tr>
+                <tr id="prevGstRow" style="display: none; color: #0b3c8a; font-weight: 600;">
+                  <td style="padding: 5px;">GST (<span id="prevGstRate">18</span>%):</td>
+                  <td style="padding: 5px; text-align: right;">+ ₹ <span id="prevGstAmount">0.00</span></td>
+                </tr>
+                <tr style="border-top: 2px solid #062559; font-size: 1.15rem; background: #fef9c3;">
+                  <td style="padding: 8px;"><strong>Grand Total:</strong></td>
+                  <td style="padding: 8px; text-align: right;"><strong>₹ <span id="prevGrandTotal">0.00</span></strong></td>
+                </tr>
+                <tr id="prevPaidRow" style="display: none; color: #166534;">
+                  <td style="padding: 5px;">Paid Amount:</td>
+                  <td style="padding: 5px; text-align: right;">₹ <span id="prevPaidAmount">0.00</span></td>
+                </tr>
+                <tr id="prevDueRow" style="display: none; color: #dc2626; font-weight: 700;">
+                  <td style="padding: 5px;">Balance Due (बकाया):</td>
+                  <td style="padding: 5px; text-align: right;">₹ <span id="prevDueAmount">0.00</span></td>
+                </tr>
+              </table>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 1rem; border-top: 1px dashed #94a3b8; font-size: 0.9rem; color: #0f172a;">
+              <div>
+                <p>नोट: बिका हुआ सामान वापस नहीं होगा। वारंटी कंपनी की शर्तों के अनुसार।</p>
+                <p style="margin-top: 4px; font-weight: 600;">धन्यवाद! फिर पधारें।</p>
+              </div>
+              <div style="text-align: center;">
+                <p style="margin-bottom: 25px;">हस्ताक्षर (Authorized Signatory)</p>
+                <strong>संदीप यादव (Sandeep Computer World)</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="no-print" style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button type="button" onclick="saveAndPrintInvoice()" class="btn btn-primary">💾 Save &amp; Print A4 Bill</button>
+            <button type="button" onclick="sendBillOnWhatsApp()" class="btn btn-whatsapp">📲 ग्राहक को WhatsApp पर भेजें</button>
           </div>
         </div>
-      </div>
 
-      <div class="no-print" style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-        <button type="button" onclick="printInvoice()" class="btn btn-primary">🖨️ Print Bill / Save PDF</button>
-        <button type="button" onclick="sendBillOnWhatsApp()" class="btn btn-whatsapp">📲 ग्राहक को WhatsApp पर बिल भेजें</button>
+        <!-- 3. ALL BILLS / DATE-WISE HISTORY TAB -->
+        <div id="tab-bills" class="tab-panel no-print">
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+              <h2>📂 सभी बिलों का रिकॉर्ड (Date-Wise Bill History)</h2>
+              <button class="btn btn-excel" onclick="exportBillsExcel()">📥 Export to Excel</button>
+            </div>
+
+            <div class="grid-3" style="margin-bottom: 1rem;">
+              <div class="form-group">
+                <label>🔍 नाम / बिल नंबर / मोबाइल से खोजें</label>
+                <input type="text" id="billSearchInput" class="form-control" placeholder="Search..." oninput="renderBillsTable()" />
+              </div>
+              <div class="form-group">
+                <label>📅 किस तारीख से (From Date)</label>
+                <input type="date" id="filterFromDate" class="form-control" onchange="renderBillsTable()" />
+              </div>
+              <div class="form-group">
+                <label>📅 किस तारीख तक (To Date)</label>
+                <input type="date" id="filterToDate" class="form-control" onchange="renderBillsTable()" />
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Bill No</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Payment</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="allBillsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. SAVED CUSTOMERS TAB -->
+        <div id="tab-customers" class="tab-panel no-print">
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+              <h2>👥 सेव किए गए स्थायी ग्राहक (Permanent Customer Directory)</h2>
+              <button class="btn btn-excel" onclick="exportCustomersExcel()">📥 Export Customers to Excel</button>
+            </div>
+            <div class="form-group" style="max-width: 400px;">
+              <input type="text" id="custSearchInput" class="form-control" placeholder="नाम, मोबाइल या पते से खोजें..." oninput="renderCustomersTable()" />
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>ग्राहक का नाम</th>
+                    <th>मोबाइल नंबर</th>
+                    <th>पता</th>
+                    <th>अंतिम विज़िट</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="savedCustomersBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. REPAIRING JOB SHEET TAB -->
+        <div id="tab-repairs" class="tab-panel no-print">
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+              <h2>🔧 रिपेयरिंग जॉब शीट (Repair Tracker)</h2>
+              <button class="btn btn-excel" onclick="exportRepairsExcel()">📥 Export Jobs to Excel</button>
+            </div>
+
+            <form onsubmit="addRepairJob(event)" class="grid-3" style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
+              <div class="form-group"><input type="text" id="repCustName" class="form-control" placeholder="ग्राहक का नाम*" required /></div>
+              <div class="form-group"><input type="text" id="repCustPhone" class="form-control" placeholder="मोबाइल नंबर*" required /></div>
+              <div class="form-group"><input type="text" id="repDevice" class="form-control" placeholder="डिवाइस (जैसे: Dell Laptop)" required /></div>
+              <div class="form-group"><input type="text" id="repIssue" class="form-control" placeholder="समस्या (जैसे: Screen Broken)" required /></div>
+              <div class="form-group"><input type="number" id="repCost" class="form-control" placeholder="अनुमानित खर्च ₹" required /></div>
+              <div class="form-group"><button type="submit" class="btn btn-primary" style="width: 100%;">+ रिपेयरिंग एंट्री जोड़ें</button></div>
+            </form>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Job ID</th>
+                    <th>Customer</th>
+                    <th>Device &amp; Issue</th>
+                    <th>Est. Cost</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="repairsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. STOCK & RATE LIST TAB -->
+        <div id="tab-stock" class="tab-panel no-print">
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+              <h2>📦 सामान व सर्विस रेट लिस्ट (Stock &amp; Rate List)</h2>
+              <button class="btn btn-excel" onclick="exportStockExcel()">📥 Export Rate List to Excel</button>
+            </div>
+
+            <form onsubmit="addStockItem(event)" class="grid-4" style="margin-bottom: 1.5rem;">
+              <input type="text" id="stkName" class="form-control" placeholder="सामान / सर्विस का नाम*" required />
+              <input type="number" id="stkRate" class="form-control" placeholder="रेट (Rate ₹)*" required />
+              <input type="text" id="stkWarranty" class="form-control" placeholder="वारंटी (जैसे: 1 Year)" />
+              <button type="submit" class="btn btn-primary">+ रेट लिस्ट में जोड़ें</button>
+            </form>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>सामान / सर्विस का नाम</th>
+                    <th>रेट (Rate ₹)</th>
+                    <th>वारंटी</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="stockBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. DUE / UDHAAR KHATA TAB -->
+        <div id="tab-due" class="tab-panel no-print">
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+              <h2>💰 बकाया खाता (Due / Udhaar Khata)</h2>
+              <button class="btn btn-excel" onclick="exportDueExcel()">📥 Export Due List to Excel</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Bill No &amp; Date</th>
+                    <th>Customer</th>
+                    <th>Total Bill</th>
+                    <th>Paid</th>
+                    <th>Balance Due</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="dueBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. SUPER ADMIN TAB -->
+        <div id="tab-superadmin" class="tab-panel no-print">
+          <div class="card" style="max-width: 650px;">
+            <h2>⚙️ Super Admin Control Panel</h2>
+            <p style="color: var(--muted); margin-bottom: 1.25rem;">यहाँ से मुख्य वेबसाइट के Facebook और Instagram प्रोफाइल लिंक अपडेट करें।</p>
+            <form onsubmit="saveSocialLinks(event)">
+              <div class="form-group">
+                <label>📘 Facebook Profile / Page URL</label>
+                <input type="url" id="adminFbUrl" class="form-control" placeholder="https://facebook.com/sandeepcomputerworld" />
+              </div>
+              <div class="form-group">
+                <label>📸 Instagram Profile URL</label>
+                <input type="url" id="adminIgUrl" class="form-control" placeholder="https://instagram.com/sandeepcomputerworld" />
+              </div>
+              <button type="submit" class="btn btn-primary">💾 Save &amp; Update on Main Site</button>
+            </form>
+          </div>
+        </div>
+
       </div>
     </div>
-
-  </section>
+  </div>
 
   <script src="css/script.js"></script>
 </body>

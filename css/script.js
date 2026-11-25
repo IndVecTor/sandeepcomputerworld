@@ -39,27 +39,19 @@ function generateLogoSVG(uid) {
   </svg>`;
 }
 
-// 2. Bilingual Dictionary (Hindi & English)
+// 2. Bilingual Dictionary (Public Pages)
 const TRANSLATIONS = {
   hi: {
-    nav_home: "होम (Home)",
-    nav_services: "सेवाएं (Services)",
-    nav_about: "हमारे बारे में",
-    nav_contact: "संपर्क करें",
-    nav_login: "ऑफिशियल लॉगिन",
+    nav_home: "होम (Home)", nav_services: "सेवाएं (Services)", nav_about: "हमारे बारे में", nav_contact: "संपर्क करें", nav_login: "ऑफिशियल लॉगिन",
     hero_badge: "📍 जीयनपुर, आज़मगढ़ का भरोसेमंद टेक सेंटर",
     hero_title: "कंप्यूटर, लैपटॉप रिपेयरिंग और <span>CCTV कैमरा</span> की संपूर्ण सेवा",
     hero_desc: "प्रो. संदीप यादव द्वारा संचालित — घर, दुकान, ऑफिस और सोसाइटी के लिए तेज़ रिपेयरिंग और आधुनिक सिक्योरिटी कैमरा इंस्टॉलेशन।",
-    btn_call: "📞 कॉल करें: 7388245758",
-    btn_wa: "💬 Direct WhatsApp",
+    btn_call: "📞 कॉल करें: 7388245758", btn_wa: "💬 Direct WhatsApp",
     sec_services_title: "हमारी प्रमुख सेवाएं (Our Services)",
     sec_services_sub: "सभी प्रकार के हार्डवेयर, सॉफ्टवेयर और सिक्योरिटी समाधान एक ही छत के नीचे",
-    card1_title: "💻 लैपटॉप रिपेयरिंग",
-    card1_desc: "सभी कंपनियों के लैपटॉप की चिप-लेवल और पार्ट रिपेयरिंग की जाती है।",
-    card2_title: "🖥️ कंप्यूटर व सॉफ्टवेयर",
-    card2_desc: "नए डेस्कटॉप असेंबलिंग से लेकर सभी सॉफ्टवेयर समस्याओं का समाधान।",
-    card3_title: "📹 CCTV कैमरा इंस्टॉलेशन",
-    card3_desc: "अपने घर, दुकान और ऑफिस को 24x7 सुरक्षित रखें।",
+    card1_title: "💻 लैपटॉप रिपेयरिंग", card1_desc: "सभी कंपनियों के लैपटॉप की चिप-लेवल और पार्ट रिपेयरिंग की जाती है।",
+    card2_title: "🖥️ कंप्यूटर व सॉफ्टवेयर", card2_desc: "नए डेस्कटॉप असेंबलिंग से लेकर सभी सॉफ्टवेयर समस्याओं का समाधान।",
+    card3_title: "📹 CCTV कैमरा इंस्टॉलेशन", card3_desc: "अपने घर, दुकान और ऑफिस को 24x7 सुरक्षित रखें।",
     btn_all_services: "सभी सेवाएं विस्तार से देखें →",
     wa_box_title: "💬 सीधे संदीप यादव जी को WhatsApp मैसेज भेजें",
     wa_box_sub: "अपनी समस्या लिखें और सीधे WhatsApp पर तुरंत जवाब पाएं",
@@ -71,24 +63,16 @@ const TRANSLATIONS = {
     contact_sub: "किसी भी पूछताछ या सर्विस बुकिंग के लिए सीधे कॉल या व्हाट्सएप करें"
   },
   en: {
-    nav_home: "Home",
-    nav_services: "Services",
-    nav_about: "About Us",
-    nav_contact: "Contact",
-    nav_login: "Official Login",
+    nav_home: "Home", nav_services: "Services", nav_about: "About Us", nav_contact: "Contact", nav_login: "Official Login",
     hero_badge: "📍 Trusted Tech & Security Center in Jiyanpur, Azamgarh",
     hero_title: "Complete Computer, Laptop Repair & <span>CCTV Camera</span> Services",
     hero_desc: "Managed by Prop. Sandeep Yadav — Fast chip-level repair and modern security camera installation for homes, shops, and offices.",
-    btn_call: "📞 Call Now: 7388245758",
-    btn_wa: "💬 Direct WhatsApp",
+    btn_call: "📞 Call Now: 7388245758", btn_wa: "💬 Direct WhatsApp",
     sec_services_title: "Our Core Services",
     sec_services_sub: "Complete hardware, software, and security solutions under one roof",
-    card1_title: "💻 Laptop Repairing",
-    card1_desc: "Chip-level motherboard and spare part repair for all laptop brands.",
-    card2_title: "🖥️ Computer & Software",
-    card2_desc: "New desktop assembling and complete Windows & software solutions.",
-    card3_title: "📹 CCTV Camera Installation",
-    card3_desc: "Keep your home, shop, and office secure 24x7 with HD & IP cameras.",
+    card1_title: "💻 Laptop Repairing", card1_desc: "Chip-level motherboard and spare part repair for all laptop brands.",
+    card2_title: "🖥️ Computer & Software", card2_desc: "New desktop assembling and complete Windows & software solutions.",
+    card3_title: "📹 CCTV Camera Installation", card3_desc: "Keep your home, shop, and office secure 24x7 with HD & IP cameras.",
     btn_all_services: "Explore All Services →",
     wa_box_title: "💬 Send Direct WhatsApp Message to Sandeep Yadav",
     wa_box_sub: "Describe your issue and get an instant reply on WhatsApp",
@@ -101,7 +85,7 @@ const TRANSLATIONS = {
   }
 };
 
-// 3. Theme Mode Switcher
+// 3. Theme & Language
 function toggleTheme() {
   const next = document.body.classList.contains("dark-theme") ? "light" : "dark";
   localStorage.setItem("scw_theme", next);
@@ -110,19 +94,12 @@ function toggleTheme() {
 
 function applyTheme(theme) {
   const btn = document.getElementById("themeToggleBtn");
-  if (theme === "dark") {
-    document.body.classList.add("dark-theme");
-    if (btn) btn.innerText = "☀️ Light";
-  } else {
-    document.body.classList.remove("dark-theme");
-    if (btn) btn.innerText = "🌙 Dark";
-  }
+  document.body.classList.toggle("dark-theme", theme === "dark");
+  if (btn) btn.innerText = theme === "dark" ? "☀️ Light" : "🌙 Dark";
 }
 
-// 4. Language Switcher
 function toggleLanguage() {
-  const current = localStorage.getItem("scw_lang") || "hi";
-  const next = current === "hi" ? "en" : "hi";
+  const next = (localStorage.getItem("scw_lang") || "hi") === "hi" ? "en" : "hi";
   localStorage.setItem("scw_lang", next);
   applyLanguage(next);
 }
@@ -138,40 +115,33 @@ function applyLanguage(lang) {
   });
 }
 
-// 5. Social Links Renderer
+// 4. Social Links
 function getSocialConfig() {
   const saved = localStorage.getItem("scw_social_links");
-  return saved ? JSON.parse(saved) : {
-    facebook: "https://facebook.com",
-    instagram: "https://instagram.com"
-  };
+  return saved ? JSON.parse(saved) : { facebook: "https://facebook.com", instagram: "https://instagram.com" };
 }
 
 function renderSocialLinks() {
   const config = getSocialConfig();
   document.querySelectorAll(".dynamic-socials").forEach(box => {
     let html = "";
-    if (config.facebook && config.facebook.trim() !== "") {
-      html += `<a href="${config.facebook}" target="_blank" class="social-btn fb-bg">📘 Facebook</a>`;
-    }
-    if (config.instagram && config.instagram.trim() !== "") {
-      html += `<a href="${config.instagram}" target="_blank" class="social-btn ig-bg">📸 Instagram</a>`;
-    }
+    if (config.facebook && config.facebook.trim() !== "") html += `<a href="${config.facebook}" target="_blank" class="social-btn fb-bg">📘 Facebook</a>`;
+    if (config.instagram && config.instagram.trim() !== "") html += `<a href="${config.instagram}" target="_blank" class="social-btn ig-bg">📸 Instagram</a>`;
     box.innerHTML = html;
   });
 }
 
-// 6. Direct WhatsApp Message
+// 5. Direct WhatsApp
 function sendWhatsAppMessage(event) {
   if (event) event.preventDefault();
   const name = document.getElementById("waName")?.value || "Customer";
   const service = document.getElementById("waService")?.value || "General Inquiry";
-  const msg = document.getElementById("waMsg")?.value || "Hello Sandeep Ji, mujhe service chahiye.";
+  const msg = document.getElementById("waMsg")?.value || "";
   const text = `नमस्ते संदीप जी (Sandeep Computer World),%0A*नाम:* ${encodeURIComponent(name)}%0A*सर्विस:* ${encodeURIComponent(service)}%0A*संदेश:* ${encodeURIComponent(msg)}`;
   window.open(`https://wa.me/${OWNER_WA}?text=${text}`, "_blank");
 }
 
-// 7. Official Login & Logout
+// 6. Official Login & Logout
 function handleLogin(event) {
   if (event) event.preventDefault();
   const role = document.getElementById("loginRole").value;
@@ -194,12 +164,55 @@ function logoutUser() {
   window.location.href = "login.html";
 }
 
-// 8. Dashboard & Billing System Logic (Runs only on dashboard.html)
-let billCounter = localStorage.getItem("scw_bill_counter") || 1001;
+// ==================== 7. ERP STORAGE & EXCEL EXPORT ENGINE ====================
+function getDB(key, fallback = []) {
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : fallback;
+}
+
+function setDB(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function exportTableToExcel(filename, headers, rows) {
+  if (!rows || rows.length === 0) {
+    alert("एक्सपोर्ट करने के लिए कोई डेटा उपलब्ध नहीं है!");
+    return;
+  }
+  const csvContent = [
+    headers.join(","),
+    ...rows.map(r => r.map(cell => `"${String(cell ?? "").replace(/"/g, '""')}"`).join(","))
+  ].join("\n");
+
+  const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `${filename}_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// ==================== 8. DASHBOARD & BILLING SYSTEM ====================
+function switchTab(tabId, btnEl) {
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".sidebar-btn").forEach(b => b.classList.remove("active"));
+  const panel = document.getElementById(tabId);
+  if (panel) panel.classList.add("active");
+  if (btnEl) btnEl.classList.add("active");
+  document.getElementById("erpSidebar")?.classList.remove("open");
+
+  if (tabId === "tab-overview") refreshOverviewStats();
+  if (tabId === "tab-bills") renderBillsTable();
+  if (tabId === "tab-customers") renderCustomersTable();
+  if (tabId === "tab-repairs") renderRepairsTable();
+  if (tabId === "tab-stock") renderStockTable();
+  if (tabId === "tab-due") renderDueTable();
+}
 
 function initDashboard() {
-  const billingSection = document.getElementById("billingSection");
-  if (!billingSection) return; // Exit if not on dashboard page
+  const wrapper = document.getElementById("erpWrapper");
+  if (!wrapper) return;
 
   const role = localStorage.getItem("scw_auth_role");
   if (!role) {
@@ -208,62 +221,191 @@ function initDashboard() {
   }
 
   if (role === "superadmin") {
-    document.getElementById("superAdminSection").style.display = "block";
-    document.getElementById("roleBadge").innerText = "Super Admin & Billing Panel";
-    const currentSocials = getSocialConfig();
-    document.getElementById("adminFbUrl").value = currentSocials.facebook;
-    document.getElementById("adminIgUrl").value = currentSocials.instagram;
+    document.getElementById("superAdminNavItem").style.display = "block";
+    document.getElementById("roleBadge").innerText = "Super Admin & Billing ERP";
+    const socials = getSocialConfig();
+    document.getElementById("adminFbUrl").value = socials.facebook;
+    document.getElementById("adminIgUrl").value = socials.instagram;
   } else {
-    document.getElementById("roleBadge").innerText = "Shop Owner Billing Panel (Sandeep Yadav)";
+    document.getElementById("roleBadge").innerText = "Shop Owner: Sandeep Yadav";
   }
 
-  document.getElementById("prevBillNo").innerText = "SCW-" + billCounter;
-  document.getElementById("prevDate").innerText = new Date().toLocaleDateString("hi-IN");
-  addItemRow("Laptop / Computer Service", 1, 500);
+  // Initialize Default Stock if empty
+  if (getDB("scw_stock", null) === null) {
+    setDB("scw_stock", [
+      { id: 1, name: "Laptop General Service & Cleaning", rate: 300, warranty: "No Warranty" },
+      { id: 2, name: "Windows 10/11 Installation + Software", rate: 400, warranty: "No Warranty" },
+      { id: 3, name: "256GB NVMe / SATA SSD Upgrade", rate: 2200, warranty: "3 Years" },
+      { id: 4, name: "CCTV 2MP HD Bullet/Dome Camera", rate: 1450, warranty: "2 Years" },
+      { id: 5, name: "4 Channel DVR Setup + Installation", rate: 3500, warranty: "2 Years" }
+    ]);
+  }
+
+  // Setup Bill Date & Number
+  const todayISO = new Date().toISOString().slice(0, 10);
+  document.getElementById("billDateInput").value = todayISO;
+  updateNextBillNo();
+  populateCustomerDropdown();
+  populateStockDropdown();
+  addItemRow("Laptop / Computer Service", 1, 500, "No Warranty");
+  refreshOverviewStats();
 }
 
-function saveSocialLinks(e) {
-  e.preventDefault();
-  const fb = document.getElementById("adminFbUrl").value.trim();
-  const ig = document.getElementById("adminIgUrl").value.trim();
-  localStorage.setItem("scw_social_links", JSON.stringify({ facebook: fb, instagram: ig }));
-  alert("✅ Facebook और Instagram लिंक मुख्य वेबसाइट पर अपडेट हो गए हैं!");
+function updateNextBillNo() {
+  const bills = getDB("scw_bills", []);
+  const nextNum = 1001 + bills.length;
+  document.getElementById("prevBillNo").innerText = "SCW-" + nextNum;
 }
 
-function addItemRow(desc = "", qty = 1, rate = 0) {
+// Permanent Customer Save & Auto-Fill
+function populateCustomerDropdown() {
+  const customers = getDB("scw_customers", []);
+  const select = document.getElementById("savedCustSelect");
+  if (!select) return;
+  select.innerHTML = `<option value="">-- पुराने सेव किए गए ग्राहक चुनें (Auto-Fill) --</option>`;
+  customers.forEach((c, idx) => {
+    select.innerHTML += `<option value="${idx}">${c.name} (${c.phone || "No Phone"})</option>`;
+  });
+}
+
+function fillSavedCustomer() {
+  const idx = document.getElementById("savedCustSelect").value;
+  if (idx === "") return;
+  const customers = getDB("scw_customers", []);
+  const c = customers[idx];
+  if (c) {
+    document.getElementById("custName").value = c.name;
+    document.getElementById("custPhone").value = c.phone;
+    document.getElementById("custAddress").value = c.address;
+    updateBillPreview();
+  }
+}
+
+function autoFillByPhone() {
+  const phone = document.getElementById("custPhone").value.trim();
+  if (phone.length < 10) return;
+  const customers = getDB("scw_customers", []);
+  const found = customers.find(c => c.phone === phone);
+  if (found) {
+    if (!document.getElementById("custName").value) document.getElementById("custName").value = found.name;
+    if (!document.getElementById("custAddress").value) document.getElementById("custAddress").value = found.address;
+    updateBillPreview();
+  }
+}
+
+function saveCustomerPermanently(name, phone, address) {
+  if (!name) return;
+  const customers = getDB("scw_customers", []);
+  const existingIdx = customers.findIndex(c => (phone && c.phone === phone) || c.name.toLowerCase() === name.toLowerCase());
+  const record = {
+    name,
+    phone: phone || "",
+    address: address || "",
+    lastVisit: new Date().toISOString().slice(0, 10)
+  };
+  if (existingIdx >= 0) {
+    customers[existingIdx] = { ...customers[existingIdx], ...record };
+  } else {
+    customers.push(record);
+  }
+  setDB("scw_customers", customers);
+  populateCustomerDropdown();
+}
+
+// Stock Quick Selector
+function populateStockDropdown() {
+  const stock = getDB("scw_stock", []);
+  const sel = document.getElementById("quickStockSelect");
+  if (!sel) return;
+  sel.innerHTML = `<option value="">-- रेट लिस्ट से सामान/सर्विस चुनें --</option>`;
+  stock.forEach((item, idx) => {
+    sel.innerHTML += `<option value="${idx}">${item.name} — ₹${item.rate} (${item.warranty})</option>`;
+  });
+}
+
+function addFromStockList() {
+  const idx = document.getElementById("quickStockSelect").value;
+  if (idx === "") return;
+  const stock = getDB("scw_stock", []);
+  const item = stock[idx];
+  if (item) {
+    addItemRow(item.name, 1, item.rate, item.warranty);
+    document.getElementById("quickStockSelect").value = "";
+  }
+}
+
+// Invoice Item Rows
+function addItemRow(desc = "", qty = 1, rate = 0, warranty = "No Warranty") {
   const container = document.getElementById("itemsContainer");
-  if (!container) return;
   const row = document.createElement("div");
   row.className = "item-row";
-  row.style.cssText = "display: grid; grid-template-columns: 2fr 0.7fr 1fr auto; gap: 10px; margin-bottom: 10px;";
+  row.style.cssText = "display: grid; grid-template-columns: 2.2fr 1.1fr 0.6fr 0.9fr auto; gap: 8px; margin-bottom: 8px;";
   row.innerHTML = `
-    <input type="text" class="form-control item-desc" placeholder="आइटम या सर्विस का नाम (जैसे: Laptop Screen / CCTV Setup)" value="${desc}" oninput="updateBillPreview()" />
+    <input type="text" class="form-control item-desc" placeholder="सामान / सर्विस का नाम" value="${desc}" oninput="updateBillPreview()" />
+    <input type="text" class="form-control item-warranty" placeholder="Warranty" value="${warranty}" oninput="updateBillPreview()" />
     <input type="number" class="form-control item-qty" placeholder="Qty" value="${qty}" min="1" oninput="updateBillPreview()" />
     <input type="number" class="form-control item-rate" placeholder="Rate ₹" value="${rate}" min="0" oninput="updateBillPreview()" />
-    <button type="button" class="btn btn-danger" onclick="this.parentElement.remove(); updateBillPreview();" style="padding: 0.5rem 0.8rem;">✕</button>
+    <button type="button" class="btn btn-danger" onclick="this.parentElement.remove(); updateBillPreview();" style="padding: 0.45rem 0.75rem;">✕</button>
   `;
   container.appendChild(row);
   updateBillPreview();
 }
 
+function getSelectedTick(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : "";
+}
+
 function updateBillPreview() {
-  if (!document.getElementById("prevCustName")) return;
   document.getElementById("prevCustName").innerText = document.getElementById("custName").value || "______________________";
   document.getElementById("prevCustPhone").innerText = document.getElementById("custPhone").value || "______________";
   document.getElementById("prevCustAddress").innerText = document.getElementById("custAddress").value || "______________________";
 
+  const rawDate = document.getElementById("billDateInput").value;
+  if (rawDate) {
+    const [y, m, d] = rawDate.split("-");
+    document.getElementById("prevDate").innerText = `${d}/${m}/${y}`;
+  }
+
+  // Payment Mode & Status Tick
+  const payMode = getSelectedTick("payMode");
+  const payStatus = getSelectedTick("payStatus");
+  document.getElementById("prevPayMode").innerText = payMode;
+  document.getElementById("prevPayStatus").innerText = payStatus;
+
+  const dueBox = document.getElementById("partialPaidBox");
+  if (payStatus === "Partial (आधा जमा)") {
+    dueBox.style.display = "block";
+  } else {
+    dueBox.style.display = "none";
+  }
+
+  // Items Calculation
   const rows = document.querySelectorAll(".item-row");
   const tbody = document.getElementById("prevItemsBody");
   tbody.innerHTML = "";
   let subTotal = 0;
+  const itemsList = [];
 
   rows.forEach((row, index) => {
     const desc = row.querySelector(".item-desc").value || "Item " + (index + 1);
+    const warranty = row.querySelector(".item-warranty").value || "-";
     const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
     const rate = parseFloat(row.querySelector(".item-rate").value) || 0;
     const amount = qty * rate;
     subTotal += amount;
-    tbody.innerHTML += `<tr><td>${index + 1}</td><td>${desc}</td><td>${qty}</td><td>₹ ${rate.toFixed(2)}</td><td>₹ ${amount.toFixed(2)}</td></tr>`;
+    itemsList.push({ desc, warranty, qty, rate, amount });
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${desc}</td>
+        <td>${warranty}</td>
+        <td>${qty}</td>
+        <td>₹ ${rate.toFixed(2)}</td>
+        <td>₹ ${amount.toFixed(2)}</td>
+      </tr>
+    `;
   });
 
   const discount = parseFloat(document.getElementById("billDiscount").value) || 0;
@@ -273,6 +415,7 @@ function updateBillPreview() {
   document.getElementById("prevDiscountRow").style.display = discount > 0 ? "table-row" : "none";
   document.getElementById("prevDiscount").innerText = discount.toFixed(2);
 
+  // GST Toggle
   const isGstApplied = document.getElementById("gstToggle").checked;
   const gstPercent = parseFloat(document.getElementById("gstPercent").value) || 0;
   let gstAmount = 0;
@@ -291,34 +434,371 @@ function updateBillPreview() {
     document.getElementById("gstNumberBox").style.display = "none";
     document.getElementById("prevGstRow").style.display = "none";
     document.getElementById("printGstinRow").style.display = "none";
-    document.getElementById("invoiceTypeTitle").innerText = "CASH MEMO / INVOICE";
+    document.getElementById("invoiceTypeTitle").innerText = "A4 CASH MEMO / INVOICE";
   }
 
-  document.getElementById("prevGrandTotal").innerText = (taxableAmount + gstAmount).toFixed(2);
+  const grandTotal = taxableAmount + gstAmount;
+  document.getElementById("prevGrandTotal").innerText = grandTotal.toFixed(2);
+
+  // Paid & Due Calculation
+  let paidAmount = grandTotal;
+  let dueAmount = 0;
+  if (payStatus === "Unpaid (उधार)") {
+    paidAmount = 0;
+    dueAmount = grandTotal;
+  } else if (payStatus === "Partial (आधा जमा)") {
+    paidAmount = parseFloat(document.getElementById("paidAmountInput").value) || 0;
+    dueAmount = Math.max(0, grandTotal - paidAmount);
+  }
+
+  document.getElementById("prevPaidRow").style.display = dueAmount > 0 ? "table-row" : "none";
+  document.getElementById("prevDueRow").style.display = dueAmount > 0 ? "table-row" : "none";
+  document.getElementById("prevPaidAmount").innerText = paidAmount.toFixed(2);
+  document.getElementById("prevDueAmount").innerText = dueAmount.toFixed(2);
+
+  return {
+    billNo: document.getElementById("prevBillNo").innerText,
+    date: rawDate,
+    custName: document.getElementById("custName").value.trim() || "Walk-in Customer",
+    custPhone: document.getElementById("custPhone").value.trim(),
+    custAddress: document.getElementById("custAddress").value.trim(),
+    payMode,
+    payStatus,
+    isGstApplied,
+    gstPercent,
+    gstin: document.getElementById("shopGstin").value.trim(),
+    items: itemsList,
+    subTotal,
+    discount,
+    gstAmount,
+    grandTotal,
+    paidAmount,
+    dueAmount
+  };
 }
 
-function printInvoice() {
-  billCounter++;
-  localStorage.setItem("scw_bill_counter", billCounter);
+function saveAndPrintInvoice() {
+  const billData = updateBillPreview();
+  if (!billData.custName || billData.custName === "Walk-in Customer") {
+    if (!document.getElementById("custName").value.trim()) {
+      alert("कृपया ग्राहक का नाम जरूर लिखें ताकि रिकॉर्ड सेव हो सके!");
+      return;
+    }
+  }
+
+  // Save Customer Permanently
+  saveCustomerPermanently(billData.custName, billData.custPhone, billData.custAddress);
+
+  // Save Bill Permanently
+  const bills = getDB("scw_bills", []);
+  const existingIndex = bills.findIndex(b => b.billNo === billData.billNo);
+  if (existingIndex >= 0) {
+    bills[existingIndex] = billData;
+  } else {
+    bills.unshift(billData);
+  }
+  setDB("scw_bills", bills);
+
   window.print();
-  document.getElementById("prevBillNo").innerText = "SCW-" + billCounter;
+  updateNextBillNo();
+  refreshOverviewStats();
 }
 
 function sendBillOnWhatsApp() {
-  const custName = document.getElementById("custName").value || "Customer";
-  const custPhone = document.getElementById("custPhone").value.replace(/\D/g, "");
-  const billNo = document.getElementById("prevBillNo").innerText;
-  const total = document.getElementById("prevGrandTotal").innerText;
-  if (custPhone.length < 10) {
+  const billData = updateBillPreview();
+  const phone = billData.custPhone.replace(/\D/g, "");
+  if (phone.length < 10) {
     alert("कृपया ग्राहक का 10 अंकों का सही मोबाइल नंबर डालें!");
     return;
   }
-  const waNumber = custPhone.length === 10 ? "91" + custPhone : custPhone;
-  const msg = `*SANDEEP COMPUTER WORLD* (जीयनपुर, आज़मगढ़)%0A%0Aनमस्ते *${encodeURIComponent(custName)}* जी,%0Aआपका बिल जनरेट हो गया है:%0A🧾 *Bill No:* ${billNo}%0A💰 *कुल राशि (Total):* ₹${total}%0A%0Aधन्यवाद!%0A- संदीप यादव (7388245758)`;
+  const waNumber = phone.length === 10 ? "91" + phone : phone;
+  const dueLine = billData.dueAmount > 0 ? `%0A⚠️ *बकाया राशि (Due):* ₹${billData.dueAmount.toFixed(2)}` : "";
+  const msg = `*SANDEEP COMPUTER WORLD* (जीयनपुर, आज़मगढ़)%0A%0Aनमस्ते *${encodeURIComponent(billData.custName)}* जी,%0Aआपका A4 बिल जनरेट हो गया है:%0A🧾 *Bill No:* ${billData.billNo}%0A📅 *तारीख:* ${billData.date}%0A💳 *पेमेंट:* ${billData.payMode} (${billData.payStatus})%0A💰 *कुल राशि (Total):* ₹${billData.grandTotal.toFixed(2)}${dueLine}%0A%0Aधन्यवाद!%0A- संदीप यादव (7388245758)`;
   window.open(`https://wa.me/${waNumber}?text=${msg}`, "_blank");
 }
 
-// Run on every page load
+// ==================== 9. ALL BILLS (DATE FILTER & REPRINT) ====================
+function renderBillsTable() {
+  const bills = getDB("scw_bills", []);
+  const search = (document.getElementById("billSearchInput")?.value || "").toLowerCase();
+  const fromDate = document.getElementById("filterFromDate")?.value || "";
+  const toDate = document.getElementById("filterToDate")?.value || "";
+
+  const filtered = bills.filter(b => {
+    const matchText = b.custName.toLowerCase().includes(search) || b.billNo.toLowerCase().includes(search) || (b.custPhone || "").includes(search);
+    const matchFrom = !fromDate || b.date >= fromDate;
+    const matchTo = !toDate || b.date <= toDate;
+    return matchText && matchFrom && matchTo;
+  });
+
+  const tbody = document.getElementById("allBillsBody");
+  if (!tbody) return;
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">इस तारीख या सर्च के लिए कोई बिल नहीं मिला।</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(b => `
+    <tr>
+      <td><strong>${b.billNo}</strong></td>
+      <td>${b.date}</td>
+      <td>${b.custName}<br><small>${b.custPhone || "-"}</small></td>
+      <td>${b.payMode}</td>
+      <td><strong>₹${Number(b.grandTotal).toFixed(2)}</strong></td>
+      <td>${b.dueAmount > 0 ? `<span class="status-pill pill-due">Due: ₹${Number(b.dueAmount).toFixed(2)}</span>` : `<span class="status-pill pill-paid">Paid</span>`}</td>
+      <td>
+        <button class="btn btn-primary btn-sm" onclick="loadBillForReprint('${b.billNo}')">🖨️ View / Print</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function loadBillForReprint(billNo) {
+  const bills = getDB("scw_bills", []);
+  const b = bills.find(item => item.billNo === billNo);
+  if (!b) return;
+
+  switchTab("tab-create-bill", document.getElementById("navCreateBill"));
+  document.getElementById("prevBillNo").innerText = b.billNo;
+  document.getElementById("billDateInput").value = b.date;
+  document.getElementById("custName").value = b.custName;
+  document.getElementById("custPhone").value = b.custPhone;
+  document.getElementById("custAddress").value = b.custAddress;
+  document.getElementById("billDiscount").value = b.discount || 0;
+  document.getElementById("gstToggle").checked = !!b.isGstApplied;
+  document.getElementById("gstPercent").value = b.gstPercent || 18;
+  document.getElementById("shopGstin").value = b.gstin || "";
+
+  document.querySelectorAll(`input[name="payMode"]`).forEach(r => { r.checked = (r.value === b.payMode); });
+  document.querySelectorAll(`input[name="payStatus"]`).forEach(r => { r.checked = (r.value === b.payStatus); });
+  document.getElementById("paidAmountInput").value = b.paidAmount || 0;
+
+  const container = document.getElementById("itemsContainer");
+  container.innerHTML = "";
+  (b.items || []).forEach(it => addItemRow(it.desc, it.qty, it.rate, it.warranty || "No Warranty"));
+  updateBillPreview();
+}
+
+function exportBillsExcel() {
+  const bills = getDB("scw_bills", []);
+  const headers = ["Bill No", "Date", "Customer Name", "Mobile", "Address", "Payment Mode", "Status", "Sub Total", "Discount", "GST", "Grand Total", "Paid", "Due"];
+  const rows = bills.map(b => [b.billNo, b.date, b.custName, b.custPhone, b.custAddress, b.payMode, b.payStatus, b.subTotal, b.discount, b.gstAmount, b.grandTotal, b.paidAmount, b.dueAmount]);
+  exportTableToExcel("SandeepComputerWorld_Bills", headers, rows);
+}
+
+// ==================== 10. SAVED CUSTOMERS ====================
+function renderCustomersTable() {
+  const customers = getDB("scw_customers", []);
+  const q = (document.getElementById("custSearchInput")?.value || "").toLowerCase();
+  const filtered = customers.filter(c => c.name.toLowerCase().includes(q) || (c.phone || "").includes(q) || (c.address || "").toLowerCase().includes(q));
+  const tbody = document.getElementById("savedCustomersBody");
+  if (!tbody) return;
+
+  tbody.innerHTML = filtered.length ? filtered.map((c, idx) => `
+    <tr>
+      <td>${idx + 1}</td>
+      <td><strong>${c.name}</strong></td>
+      <td>${c.phone || "-"}</td>
+      <td>${c.address || "-"}</td>
+      <td>${c.lastVisit || "-"}</td>
+      <td><button class="btn btn-primary btn-sm" onclick="startBillForCustomer('${c.name}', '${c.phone}', '${c.address}')">🧾 नया बिल बनाएं</button></td>
+    </tr>
+  `).join("") : `<tr><td colspan="6" style="text-align:center;">अभी कोई ग्राहक सेव नहीं है।</td></tr>`;
+}
+
+function startBillForCustomer(name, phone, address) {
+  switchTab("tab-create-bill", document.getElementById("navCreateBill"));
+  updateNextBillNo();
+  document.getElementById("custName").value = name;
+  document.getElementById("custPhone").value = phone;
+  document.getElementById("custAddress").value = address;
+  updateBillPreview();
+}
+
+function exportCustomersExcel() {
+  const customers = getDB("scw_customers", []);
+  exportTableToExcel("Saved_Customers", ["Name", "Mobile", "Address", "Last Visit"], customers.map(c => [c.name, c.phone, c.address, c.lastVisit]));
+}
+
+// ==================== 11. REPAIRING JOB SHEET ====================
+function addRepairJob(e) {
+  e.preventDefault();
+  const jobs = getDB("scw_repairs", []);
+  jobs.unshift({
+    jobId: "JOB-" + (101 + jobs.length),
+    date: new Date().toISOString().slice(0, 10),
+    custName: document.getElementById("repCustName").value.trim(),
+    custPhone: document.getElementById("repCustPhone").value.trim(),
+    device: document.getElementById("repDevice").value.trim(),
+    issue: document.getElementById("repIssue").value.trim(),
+    estCost: parseFloat(document.getElementById("repCost").value) || 0,
+    status: "Pending"
+  });
+  setDB("scw_repairs", jobs);
+  saveCustomerPermanently(document.getElementById("repCustName").value.trim(), document.getElementById("repCustPhone").value.trim(), "");
+  e.target.reset();
+  renderRepairsTable();
+  refreshOverviewStats();
+}
+
+function updateRepairStatus(idx, newStatus) {
+  const jobs = getDB("scw_repairs", []);
+  if (jobs[idx]) {
+    jobs[idx].status = newStatus;
+    setDB("scw_repairs", jobs);
+    renderRepairsTable();
+    refreshOverviewStats();
+  }
+}
+
+function convertRepairToBill(idx) {
+  const jobs = getDB("scw_repairs", []);
+  const j = jobs[idx];
+  if (!j) return;
+  switchTab("tab-create-bill", document.getElementById("navCreateBill"));
+  updateNextBillNo();
+  document.getElementById("custName").value = j.custName;
+  document.getElementById("custPhone").value = j.custPhone;
+  const container = document.getElementById("itemsContainer");
+  container.innerHTML = "";
+  addItemRow(`${j.device} Repair (${j.issue})`, 1, j.estCost, "No Warranty");
+  updateBillPreview();
+}
+
+function renderRepairsTable() {
+  const jobs = getDB("scw_repairs", []);
+  const tbody = document.getElementById("repairsBody");
+  if (!tbody) return;
+  tbody.innerHTML = jobs.length ? jobs.map((j, idx) => `
+    <tr>
+      <td><strong>${j.jobId}</strong><br><small>${j.date}</small></td>
+      <td>${j.custName}<br><small>${j.custPhone}</small></td>
+      <td>${j.device}<br><small style="color:var(--muted);">${j.issue}</small></td>
+      <td>₹${j.estCost}</td>
+      <td>
+        <select class="form-control" style="padding:4px;" onchange="updateRepairStatus(${idx}, this.value)">
+          <option value="Pending" ${j.status === "Pending" ? "selected" : ""}>Pending</option>
+          <option value="Ready" ${j.status === "Ready" ? "selected" : ""}>Ready</option>
+          <option value="Delivered" ${j.status === "Delivered" ? "selected" : ""}>Delivered</option>
+        </select>
+      </td>
+      <td><button class="btn btn-primary btn-sm" onclick="convertRepairToBill(${idx})">🧾 Bill बनाएं</button></td>
+    </tr>
+  `).join("") : `<tr><td colspan="6" style="text-align:center;">कोई रिपेयरिंग जॉब दर्ज नहीं है।</td></tr>`;
+}
+
+function exportRepairsExcel() {
+  const jobs = getDB("scw_repairs", []);
+  exportTableToExcel("Repairing_Jobs", ["Job ID", "Date", "Customer", "Mobile", "Device", "Issue", "Est Cost", "Status"], jobs.map(j => [j.jobId, j.date, j.custName, j.custPhone, j.device, j.issue, j.estCost, j.status]));
+}
+
+// ==================== 12. STOCK & RATE LIST ====================
+function addStockItem(e) {
+  e.preventDefault();
+  const stock = getDB("scw_stock", []);
+  stock.push({
+    id: Date.now(),
+    name: document.getElementById("stkName").value.trim(),
+    rate: parseFloat(document.getElementById("stkRate").value) || 0,
+    warranty: document.getElementById("stkWarranty").value.trim() || "No Warranty"
+  });
+  setDB("scw_stock", stock);
+  e.target.reset();
+  renderStockTable();
+  populateStockDropdown();
+}
+
+function deleteStockItem(idx) {
+  const stock = getDB("scw_stock", []);
+  stock.splice(idx, 1);
+  setDB("scw_stock", stock);
+  renderStockTable();
+  populateStockDropdown();
+}
+
+function renderStockTable() {
+  const stock = getDB("scw_stock", []);
+  const tbody = document.getElementById("stockBody");
+  if (!tbody) return;
+  tbody.innerHTML = stock.map((s, idx) => `
+    <tr>
+      <td>${idx + 1}</td>
+      <td><strong>${s.name}</strong></td>
+      <td>₹${Number(s.rate).toFixed(2)}</td>
+      <td>${s.warranty}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteStockItem(${idx})">Delete</button></td>
+    </tr>
+  `).join("");
+}
+
+function exportStockExcel() {
+  const stock = getDB("scw_stock", []);
+  exportTableToExcel("Stock_Rate_List", ["Item / Service Name", "Rate", "Warranty"], stock.map(s => [s.name, s.rate, s.warranty]));
+}
+
+// ==================== 13. DUE / UDHAAR KHATA ====================
+function renderDueTable() {
+  const bills = getDB("scw_bills", []);
+  const dueBills = bills.filter(b => Number(b.dueAmount) > 0);
+  const tbody = document.getElementById("dueBody");
+  if (!tbody) return;
+
+  tbody.innerHTML = dueBills.length ? dueBills.map(b => `
+    <tr>
+      <td><strong>${b.billNo}</strong> (${b.date})</td>
+      <td>${b.custName}<br><small>${b.custPhone || "-"}</small></td>
+      <td>₹${Number(b.grandTotal).toFixed(2)}</td>
+      <td>₹${Number(b.paidAmount).toFixed(2)}</td>
+      <td><strong style="color:var(--danger);">₹${Number(b.dueAmount).toFixed(2)}</strong></td>
+      <td><button class="btn btn-whatsapp btn-sm" onclick="markBillAsPaid('${b.billNo}')">✅ Mark Full Paid</button></td>
+    </tr>
+  `).join("") : `<tr><td colspan="6" style="text-align:center;">कोई बकाया (Due) नहीं है!</td></tr>`;
+}
+
+function markBillAsPaid(billNo) {
+  const bills = getDB("scw_bills", []);
+  const idx = bills.findIndex(b => b.billNo === billNo);
+  if (idx >= 0) {
+    bills[idx].paidAmount = bills[idx].grandTotal;
+    bills[idx].dueAmount = 0;
+    bills[idx].payStatus = "Paid (पूरा जमा)";
+    setDB("scw_bills", bills);
+    renderDueTable();
+    refreshOverviewStats();
+  }
+}
+
+function exportDueExcel() {
+  const dueBills = getDB("scw_bills", []).filter(b => Number(b.dueAmount) > 0);
+  exportTableToExcel("Due_Udhaar_Khata", ["Bill No", "Date", "Customer", "Mobile", "Total", "Paid", "Due Amount"], dueBills.map(b => [b.billNo, b.date, b.custName, b.custPhone, b.grandTotal, b.paidAmount, b.dueAmount]));
+}
+
+// ==================== 14. OVERVIEW STATS & SUPER ADMIN ====================
+function refreshOverviewStats() {
+  const bills = getDB("scw_bills", []);
+  const customers = getDB("scw_customers", []);
+  const repairs = getDB("scw_repairs", []);
+  const today = new Date().toISOString().slice(0, 10);
+
+  const todaySales = bills.filter(b => b.date === today).reduce((sum, b) => sum + Number(b.grandTotal || 0), 0);
+  const totalDue = bills.reduce((sum, b) => sum + Number(b.dueAmount || 0), 0);
+  const pendingRepairs = repairs.filter(r => r.status !== "Delivered").length;
+
+  if (document.getElementById("statTodaySales")) document.getElementById("statTodaySales").innerText = "₹" + todaySales.toFixed(2);
+  if (document.getElementById("statTotalDue")) document.getElementById("statTotalDue").innerText = "₹" + totalDue.toFixed(2);
+  if (document.getElementById("statTotalBills")) document.getElementById("statTotalBills").innerText = bills.length;
+  if (document.getElementById("statPendingRepairs")) document.getElementById("statPendingRepairs").innerText = pendingRepairs + " (" + customers.length + " Customers)";
+}
+
+function saveSocialLinks(e) {
+  e.preventDefault();
+  const fb = document.getElementById("adminFbUrl").value.trim();
+  const ig = document.getElementById("adminIgUrl").value.trim();
+  localStorage.setItem("scw_social_links", JSON.stringify({ facebook: fb, instagram: ig }));
+  alert("✅ Facebook और Instagram लिंक मुख्य वेबसाइट पर अपडेट हो गए हैं!");
+}
+
+// Initialize on DOM Load
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".inject-logo").forEach((el, idx) => {
     el.innerHTML = generateLogoSVG("logo_" + idx);
