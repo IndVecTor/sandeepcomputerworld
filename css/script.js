@@ -270,7 +270,6 @@ function updateNextBillNo() {
   document.getElementById("prevBillNo").innerText = "SCW-" + nextNum;
 }
 
-// Mobile Number First Lookup & Permanent Customer Save
 function handleMobileLookup() {
   const rawPhone = document.getElementById("custPhone").value.replace(/\D/g, "");
   const hint = document.getElementById("custLookupHint");
@@ -309,7 +308,6 @@ function saveCustomerPermanently(name, phone, address) {
   setDB("scw_customers", customers);
 }
 
-// Smart Autocomplete Datalist & Auto-Save New Items to Rate List
 function populateStockDatalist() {
   const stock = getDB("scw_stock", []);
   const dl = document.getElementById("stockSuggestionsDatalist");
@@ -358,7 +356,6 @@ function syncItemsToStockList(itemsList) {
   }
 }
 
-// Invoice Item Rows (With Smart Datalist Autocomplete)
 function addItemRow(desc = "", qty = 1, rate = 0, warranty = "No Warranty") {
   const container = document.getElementById("itemsContainer");
   const row = document.createElement("div");
@@ -451,7 +448,7 @@ function updateBillPreview() {
     document.getElementById("gstNumberBox").style.display = "none";
     document.getElementById("prevGstRow").style.display = "none";
     document.getElementById("printGstinRow").style.display = "none";
-    document.getElementById("invoiceTypeTitle").innerText = "A4 CASH MEMO / INVOICE";
+    document.getElementById("invoiceTypeTitle").innerText = "CASH MEMO / INVOICE";
   }
 
   const grandTotal = taxableAmount + gstAmount;
@@ -515,6 +512,9 @@ function persistCurrentBill() {
   return billData;
 }
 
+// ==================== 4 SEPARATE 1-CLICK BILL ACTIONS ====================
+
+// Action 1: Print A4 Bill
 function saveAndPrintInvoice() {
   const saved = persistCurrentBill();
   if (!saved) return;
@@ -522,8 +522,52 @@ function saveAndPrintInvoice() {
   updateNextBillNo();
 }
 
-// 1-Click PDF Generation & WhatsApp Share
-async function downloadPdfAndShareWhatsApp() {
+// Helper: Generate Non-Blank High-Resolution A4 PDF Blob using html2canvas + jsPDF
+async function createNonBlankPdfBlob(billData) {
+  const element = document.getElementById("printableInvoice");
+  const canvas = await html2canvas(element, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: "#ffffff",
+    scrollX: 0,
+    scrollY: -window.scrollY,
+    windowWidth: element.scrollWidth,
+    windowHeight: element.scrollHeight
+  });
+
+  const imgData = canvas.toDataURL("image/jpeg", 0.98);
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const imgProps = pdf.getImageProperties(imgData);
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+  pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+  return pdf.output("blob");
+}
+
+// Action 2: 1-Click Download PDF Only (Guaranteed Full Bill, Never Blank)
+async function downloadPdfOnly() {
+  const billData = persistCurrentBill();
+  if (!billData) return;
+
+  try {
+    const pdfBlob = await createNonBlankPdfBlob(billData);
+    const filename = `${billData.billNo}_${billData.custName.replace(/\s+/g, "_")}.pdf`;
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(pdfBlob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    updateNextBillNo();
+  } catch (err) {
+    alert("PDF बनाने में त्रुटि आई, कृपया Print बटन से Save as PDF चुनें।");
+  }
+}
+
+// Action 3: 1-Click Send PDF Bill on WhatsApp
+async function sendPdfOnWhatsApp() {
   const billData = persistCurrentBill();
   if (!billData) return;
 
@@ -533,48 +577,62 @@ async function downloadPdfAndShareWhatsApp() {
     return;
   }
 
-  const element = document.getElementById("printableInvoice");
-  const filename = `${billData.billNo}_${billData.custName.replace(/\s+/g, "_")}.pdf`;
+  try {
+    const pdfBlob = await createNonBlankPdfBlob(billData);
+    const filename = `${billData.billNo}_${billData.custName.replace(/\s+/g, "_")}.pdf`;
+    const pdfFile = new File([pdfBlob], filename, { type: "application/pdf" });
 
-  const opt = {
-    margin: 6,
-    filename: filename,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-  };
-
-  if (typeof html2pdf !== "undefined") {
-    try {
-      const pdfBlob = await html2pdf().set(opt).from(element).outputPdf("blob");
-      const pdfFile = new File([pdfBlob], filename, { type: "application/pdf" });
-
-      // Trigger direct download so user always has the PDF
-      const dlLink = document.createElement("a");
-      dlLink.href = URL.createObjectURL(pdfBlob);
-      dlLink.download = filename;
-      dlLink.click();
-
-      // If mobile/supported browser supports direct file sharing, open share sheet
-      if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
-        await navigator.share({
-          files: [pdfFile],
-          title: `Invoice ${billData.billNo}`,
-          text: `Sandeep Computer World - Bill ${billData.billNo}`
-        });
-        updateNextBillNo();
-        return;
-      }
-    } catch (err) {
-      console.warn("PDF generation fallback:", err);
+    // Mobile / Supported Browsers: Direct Native PDF File Share to WhatsApp
+    if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+      await navigator.share({
+        files: [pdfFile],
+        title: `Invoice ${billData.billNo}`,
+        text: `Sandeep Computer World - Bill ${billData.billNo}`
+      });
+      updateNextBillNo();
+      return;
     }
+
+    // Desktop Browsers: Auto-download PDF & immediately open Customer WhatsApp Web
+    const dlLink = document.createElement("a");
+    dlLink.href = URL.createObjectURL(pdfBlob);
+    dlLink.download = filename;
+    document.body.appendChild(dlLink);
+    dlLink.click();
+    document.body.removeChild(dlLink);
+
+    const waNumber = phone.length === 10 ? "91" + phone : phone;
+    const msg = `नमस्ते *${encodeURIComponent(billData.custName)}* जी,%0A*SANDEEP COMPUTER WORLD* से आपका A4 PDF बिल (${billData.billNo}) नीचे संलग्न किया जा रहा है।`;
+    window.open(`https://wa.me/${waNumber}?text=${msg}`, "_blank");
+    updateNextBillNo();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// Action 4: 1-Click Send Full Text Bill Details on WhatsApp (Without PDF)
+function sendTextDetailsOnWhatsApp() {
+  const billData = persistCurrentBill();
+  if (!billData) return;
+
+  const phone = billData.custPhone.replace(/\D/g, "");
+  if (phone.length < 10) {
+    alert("कृपया ग्राहक का 10 अंकों का सही मोबाइल नंबर डालें!");
+    return;
   }
 
-  // Open Customer WhatsApp directly with summary
-  const waNumber = phone.length === 10 ? "91" + phone : phone;
+  const itemsText = billData.items
+    .map((it, i) => `${i + 1}. ${it.desc} (${it.qty} x ₹${it.rate}) = ₹${it.amount.toFixed(2)}`)
+    .join("%0A");
+
+  const gstLine = billData.isGstApplied ? `%0A🏛️ *GST (${billData.gstPercent}%):* ₹${billData.gstAmount.toFixed(2)}` : "";
+  const discLine = billData.discount > 0 ? `%0A🏷️ *Discount:* -₹${billData.discount.toFixed(2)}` : "";
   const dueLine = billData.dueAmount > 0 ? `%0A⚠️ *बकाया राशि (Due):* ₹${billData.dueAmount.toFixed(2)}` : "";
-  const msg = `*SANDEEP COMPUTER WORLD* (जीयनपुर, आज़मगढ़)%0A%0Aनमस्ते *${encodeURIComponent(billData.custName)}* जी,%0Aआपकी A4 रसीद (PDF) तैयार है (फ़ाइल डाउनलोड हो गई है, संलग्न की जा रही है):%0A🧾 *Bill No:* ${billData.billNo}%0A📅 *तारीख:* ${billData.date}%0A💳 *पेमेंट:* ${billData.payMode} (${billData.payStatus})%0A💰 *कुल राशि:* ₹${billData.grandTotal.toFixed(2)}${dueLine}%0A%0Aधन्यवाद!%0A- संदीप यादव (7388245758)`;
-  window.open(`https://wa.me/${waNumber}?text=${msg}`, "_blank");
+
+  const waNumber = phone.length === 10 ? "91" + phone : phone;
+  const fullText = `*SANDEEP COMPUTER WORLD*%0A📍 जीयनपुर, आज़मगढ़ | 📞 7388245758%0A--------------------------%0A🧾 *Bill No:* ${billData.billNo}%0A📅 *Date:* ${billData.date}%0A👤 *Customer:* ${encodeURIComponent(billData.custName)}%0A--------------------------%0A*विवरण (Items):*%0A${encodeURIComponent(itemsText).replace(/%250A/g, "%0A")}%0A--------------------------%0A*Sub Total:* ₹${billData.subTotal.toFixed(2)}${discLine}${gstLine}%0A💰 *Grand Total:* ₹${billData.grandTotal.toFixed(2)}%0A💳 *Payment:* ${billData.payMode} (${billData.payStatus})${dueLine}%0A--------------------------%0Aधन्यवाद! प्रो. संदीप यादव`;
+
+  window.open(`https://wa.me/${waNumber}?text=${fullText}`, "_blank");
   updateNextBillNo();
 }
 
@@ -857,7 +915,6 @@ function refreshOverviewStats() {
   if (document.getElementById("statRepairBreakdown")) document.getElementById("statRepairBreakdown").innerText = `Pending: ${pendingRep} | Ready: ${readyRep}`;
   if (document.getElementById("statBillsCustomers")) document.getElementById("statBillsCustomers").innerText = `${bills.length} Bills | ${customers.length} Customers`;
 
-  // Recent 5 Bills
   const recentTbody = document.getElementById("overviewRecentBills");
   if (recentTbody) {
     const recent = bills.slice(0, 5);
@@ -871,7 +928,6 @@ function refreshOverviewStats() {
     `).join("") : `<tr><td colspan="4" style="text-align:center;">अभी कोई बिल नहीं बना है।</td></tr>`;
   }
 
-  // Top Pending Dues
   const duesTbody = document.getElementById("overviewTopDues");
   if (duesTbody) {
     const topDues = bills.filter(b => Number(b.dueAmount) > 0).slice(0, 5);
