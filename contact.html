@@ -19,20 +19,24 @@
       </a>
       <nav>
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="contact.html" class="active">Contact</a></li>
-          <li><a href="login.html" class="btn-login-nav">Official Login</a></li>
+          <li><a href="index.html" data-i18n="nav_home">होम (Home)</a></li>
+          <li><a href="services.html" data-i18n="nav_services">सेवाएं (Services)</a></li>
+          <li><a href="about.html" data-i18n="nav_about">हमारे बारे में</a></li>
+          <li><a href="contact.html" class="active" data-i18n="nav_contact">संपर्क करें</a></li>
+          <li><a href="login.html" class="btn-login-nav" data-i18n="nav_login">ऑफिशियल लॉगिन</a></li>
         </ul>
+        <div class="topbar-controls">
+          <button id="langToggleBtn" class="control-btn" onclick="toggleLanguage()">🌐 English</button>
+          <button id="themeToggleBtn" class="control-btn" onclick="toggleTheme()">🌙 Dark</button>
+        </div>
       </nav>
     </div>
   </header>
 
   <section class="section">
     <div class="section-title">
-      <h2>हमसे संपर्क करें (Contact Us)</h2>
-      <p>किसी भी पूछताछ या सर्विस बुकिंग के लिए सीधे कॉल या व्हाट्सएप करें</p>
+      <h2 data-i18n="contact_title">हमसे संपर्क करें (Contact Us)</h2>
+      <p data-i18n="contact_sub">किसी भी पूछताछ या सर्विस बुकिंग के लिए सीधे कॉल या व्हाट्सएप करें</p>
     </div>
 
     <div class="grid-3" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
@@ -40,7 +44,7 @@
         <h3>📍 दुकान का पता और संपर्क</h3>
         <p style="margin-bottom: 0.75rem;"><strong>दुकान का नाम:</strong> Sandeep Computer World</p>
         <p style="margin-bottom: 0.75rem;"><strong>संचालक (Owner):</strong> संदीप यादव (Sandeep Yadav)</p>
-        <p style="margin-bottom: 0.75rem;"><strong>मोबाइल / WhatsApp:</strong> <a href="tel:+917388245758">7388245758</a></p>
+        <p style="margin-bottom: 0.75rem;"><strong>मोबाइल / WhatsApp:</strong> <a href="tel:+917388245758" style="color: #3b82f6;">7388245758</a></p>
         <p style="margin-bottom: 1rem;"><strong>पता:</strong> जीयनपुर, आज़मगढ़ (उत्तर प्रदेश)</p>
 
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -55,14 +59,14 @@
       </div>
 
       <div class="card">
-        <h3>✉️ सीधा WhatsApp मैसेज भेजें</h3>
+        <h3 data-i18n="wa_box_title">✉️ सीधा WhatsApp मैसेज भेजें</h3>
         <form onsubmit="sendWhatsAppMessage(event)">
           <div class="form-group">
-            <label>आपका नाम</label>
+            <label>आपका नाम / Name</label>
             <input type="text" id="waName" class="form-control" placeholder="अपना नाम लिखें" required />
           </div>
           <div class="form-group">
-            <label>सर्विस चुनें</label>
+            <label>सर्विस चुनें / Service</label>
             <select id="waService" class="form-control">
               <option value="Laptop Repair">लैपटॉप रिपेयरिंग</option>
               <option value="Computer Repair">कंप्यूटर रिपेयरिंग</option>
@@ -71,10 +75,10 @@
             </select>
           </div>
           <div class="form-group">
-            <label>आपका संदेश / पता</label>
+            <label>आपका संदेश / Message</label>
             <textarea id="waMsg" class="form-control" rows="4" placeholder="अपनी समस्या या पता लिखें..." required></textarea>
           </div>
-          <button type="submit" class="btn btn-whatsapp" style="width: 100%;">WhatsApp पर भेजें ➤</button>
+          <button type="submit" class="btn btn-whatsapp" style="width: 100%;" data-i18n="btn_send_wa">WhatsApp पर भेजें ➤</button>
         </form>
       </div>
     </div>

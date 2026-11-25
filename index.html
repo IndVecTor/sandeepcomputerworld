@@ -8,7 +8,6 @@
 </head>
 <body>
 
-  <!-- Header & Navigation -->
   <header>
     <div class="nav-container">
       <a href="index.html" class="brand">
@@ -20,26 +19,29 @@
       </a>
       <nav>
         <ul>
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="login.html" class="btn-login-nav">Official Login</a></li>
+          <li><a href="index.html" class="active" data-i18n="nav_home">होम (Home)</a></li>
+          <li><a href="services.html" data-i18n="nav_services">सेवाएं (Services)</a></li>
+          <li><a href="about.html" data-i18n="nav_about">हमारे बारे में</a></li>
+          <li><a href="contact.html" data-i18n="nav_contact">संपर्क करें</a></li>
+          <li><a href="login.html" class="btn-login-nav" data-i18n="nav_login">ऑफिशियल लॉगिन</a></li>
         </ul>
+        <div class="topbar-controls">
+          <button id="langToggleBtn" class="control-btn" onclick="toggleLanguage()">🌐 English</button>
+          <button id="themeToggleBtn" class="control-btn" onclick="toggleTheme()">🌙 Dark</button>
+        </div>
       </nav>
     </div>
   </header>
 
-  <!-- Hero Section -->
   <section class="hero">
     <div class="hero-grid">
       <div>
-        <span class="badge">📍 जीयनपुर, आज़मगढ़ का भरोसेमंद टेक सेंटर</span>
-        <h2>कंप्यूटर, लैपटॉप रिपेयरिंग और <span>CCTV कैमरा</span> की संपूर्ण सेवा</h2>
-        <p>प्रो. संदीप यादव द्वारा संचालित — घर, दुकान, ऑफिस और सोसाइटी के लिए तेज़ रिपेयरिंग और आधुनिक सिक्योरिटी कैमरा इंस्टॉलेशन।</p>
+        <span class="badge" data-i18n="hero_badge">📍 जीयनपुर, आज़मगढ़ का भरोसेमंद टेक सेंटर</span>
+        <h2 data-i18n="hero_title">कंप्यूटर, लैपटॉप रिपेयरिंग और <span>CCTV कैमरा</span> की संपूर्ण सेवा</h2>
+        <p data-i18n="hero_desc">प्रो. संदीप यादव द्वारा संचालित — घर, दुकान, ऑफिस और सोसाइटी के लिए तेज़ रिपेयरिंग और आधुनिक सिक्योरिटी कैमरा इंस्टॉलेशन।</p>
         <div class="hero-btns">
-          <a href="tel:+917388245758" class="btn btn-accent">📞 कॉल करें: 7388245758</a>
-          <a href="https://wa.me/917388245758?text=Hello%20Sandeep%20Ji,%20mujhe%20service%20ke%20baare%20me%20jaankari%20chahiye." target="_blank" class="btn btn-whatsapp">💬 Direct WhatsApp</a>
+          <a href="tel:+917388245758" class="btn btn-accent" data-i18n="btn_call">📞 कॉल करें: 7388245758</a>
+          <a href="https://wa.me/917388245758?text=Hello%20Sandeep%20Ji,%20mujhe%20service%20ke%20baare%20me%20jaankari%20chahiye." target="_blank" class="btn btn-whatsapp" data-i18n="btn_wa">💬 Direct WhatsApp</a>
         </div>
         <div class="dynamic-socials social-links" style="margin-top: 1.5rem;"></div>
       </div>
@@ -52,17 +54,16 @@
     </div>
   </section>
 
-  <!-- Quick Services Preview -->
   <section class="section">
     <div class="section-title">
-      <h2>हमारी प्रमुख सेवाएं (Our Services)</h2>
-      <p>सभी प्रकार के हार्डवेयर, सॉफ्टवेयर और सिक्योरिटी समाधान एक ही छत के नीचे</p>
+      <h2 data-i18n="sec_services_title">हमारी प्रमुख सेवाएं (Our Services)</h2>
+      <p data-i18n="sec_services_sub">सभी प्रकार के हार्डवेयर, सॉफ्टवेयर और सिक्योरिटी समाधान एक ही छत के नीचे</p>
     </div>
 
     <div class="grid-3">
       <div class="card">
-        <h3>💻 लैपटॉप रिपेयरिंग</h3>
-        <p>सभी कंपनियों के लैपटॉप की चिप-लेवल और पार्ट रिपेयरिंग की जाती है।</p>
+        <h3 data-i18n="card1_title">💻 लैपटॉप रिपेयरिंग</h3>
+        <p data-i18n="card1_desc">सभी कंपनियों के लैपटॉप की चिप-लेवल और पार्ट रिपेयरिंग की जाती है।</p>
         <ul>
           <li>लैपटॉप स्क्रीन, कीबोर्ड व बैटरी रिप्लेसमेंट</li>
           <li>मदरबोर्ड रिपेयरिंग व चार्जिंग जैक</li>
@@ -71,8 +72,8 @@
       </div>
 
       <div class="card">
-        <h3>🖥️ कंप्यूटर व सॉफ्टवेयर</h3>
-        <p>नए डेस्कटॉप असेंबलिंग से लेकर सभी सॉफ्टवेयर समस्याओं का समाधान।</p>
+        <h3 data-i18n="card2_title">🖥️ कंप्यूटर व सॉफ्टवेयर</h3>
+        <p data-i18n="card2_desc">नए डेस्कटॉप असेंबलिंग से लेकर सभी सॉफ्टवेयर समस्याओं का समाधान।</p>
         <ul>
           <li>Windows 10 / 11 इंस्टॉलेशन व अपडेट</li>
           <li>एंटीवायरस व जरूरी ऑफिस सॉफ्टवेयर</li>
@@ -81,8 +82,8 @@
       </div>
 
       <div class="card">
-        <h3>📹 CCTV कैमरा इंस्टॉलेशन</h3>
-        <p>अपने घर, दुकान और ऑफिस को 24x7 सुरक्षित रखें।</p>
+        <h3 data-i18n="card3_title">📹 CCTV कैमरा इंस्टॉलेशन</h3>
+        <p data-i18n="card3_desc">अपने घर, दुकान और ऑफिस को 24x7 सुरक्षित रखें।</p>
         <ul>
           <li>Indoor, Outdoor, IP और WiFi कैमरा</li>
           <li>DVR-NVR सेटअप व मोबाइल व्यू कॉन्फ़िगरेशन</li>
@@ -92,18 +93,17 @@
     </div>
 
     <div style="text-align: center; margin-top: 2rem;">
-      <a href="services.html" class="btn btn-primary">सभी सेवाएं विस्तार से देखें →</a>
+      <a href="services.html" class="btn btn-primary" data-i18n="btn_all_services">सभी सेवाएं विस्तार से देखें →</a>
     </div>
   </section>
 
-  <!-- Direct WhatsApp Quick Box -->
   <section class="section" style="padding-top: 0;">
-    <div class="card" style="background: #eff6ff; border-color: #bfdbfe;">
-      <h3 style="text-align: center; font-size: 1.5rem;">💬 सीधे संदीप यादव जी को WhatsApp मैसेज भेजें</h3>
-      <p style="text-align: center; color: var(--muted); margin-bottom: 1.5rem;">अपनी समस्या लिखें और सीधे WhatsApp पर तुरंत जवाब पाएं</p>
+    <div class="card">
+      <h3 style="text-align: center; font-size: 1.5rem;" data-i18n="wa_box_title">💬 सीधे संदीप यादव जी को WhatsApp मैसेज भेजें</h3>
+      <p style="text-align: center; color: var(--muted); margin-bottom: 1.5rem;" data-i18n="wa_box_sub">अपनी समस्या लिखें और सीधे WhatsApp पर तुरंत जवाब पाएं</p>
       <form onsubmit="sendWhatsAppMessage(event)" style="max-width: 600px; margin: auto;">
         <div class="form-group">
-          <input type="text" id="waName" class="form-control" placeholder="आपका नाम (Your Name)" required />
+          <input type="text" id="waName" class="form-control" placeholder="आपका नाम / Your Name" required />
         </div>
         <div class="form-group">
           <select id="waService" class="form-control">
@@ -114,17 +114,15 @@
           </select>
         </div>
         <div class="form-group">
-          <textarea id="waMsg" class="form-control" rows="3" placeholder="अपना पता या समस्या लिखें..." required></textarea>
+          <textarea id="waMsg" class="form-control" rows="3" placeholder="अपना पता या समस्या लिखें / Enter your message..." required></textarea>
         </div>
-        <button type="submit" class="btn btn-whatsapp" style="width: 100%;">WhatsApp पर मैसेज भेजें ➤</button>
+        <button type="submit" class="btn btn-whatsapp" style="width: 100%;" data-i18n="btn_send_wa">WhatsApp पर मैसेज भेजें ➤</button>
       </form>
     </div>
   </section>
 
-  <!-- Floating WhatsApp -->
   <a href="https://wa.me/917388245758" target="_blank" class="floating-wa">💬 WhatsApp Chat</a>
 
-  <!-- Footer -->
   <footer>
     <div class="footer-grid">
       <div>

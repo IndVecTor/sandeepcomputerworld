@@ -19,26 +19,30 @@
       </a>
       <nav>
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="services.html" class="active">Services</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="login.html" class="btn-login-nav">Official Login</a></li>
+          <li><a href="index.html" data-i18n="nav_home">होम (Home)</a></li>
+          <li><a href="services.html" class="active" data-i18n="nav_services">सेवाएं (Services)</a></li>
+          <li><a href="about.html" data-i18n="nav_about">हमारे बारे में</a></li>
+          <li><a href="contact.html" data-i18n="nav_contact">संपर्क करें</a></li>
+          <li><a href="login.html" class="btn-login-nav" data-i18n="nav_login">ऑफिशियल लॉगिन</a></li>
         </ul>
+        <div class="topbar-controls">
+          <button id="langToggleBtn" class="control-btn" onclick="toggleLanguage()">🌐 English</button>
+          <button id="themeToggleBtn" class="control-btn" onclick="toggleTheme()">🌙 Dark</button>
+        </div>
       </nav>
     </div>
   </header>
 
   <section class="section">
     <div class="section-title">
-      <h2>हमारी सभी सेवाएं (Complete IT & Security Solutions)</h2>
+      <h2 data-i18n="sec_services_title">हमारी सभी सेवाएं (Complete IT & Security Solutions)</h2>
       <p>संपर्क करें: <strong>संदीप यादव — 7388245758</strong></p>
     </div>
 
     <div class="grid-3">
       <div class="card">
-        <h3>💻 लैपटॉप रिपेयरिंग सेंटर</h3>
-        <p>HP, Dell, Lenovo, Asus, Acer आदि सभी ब्रांड्स के लैपटॉप की रिपेयरिंग।</p>
+        <h3 data-i18n="card1_title">💻 लैपटॉप रिपेयरिंग सेंटर</h3>
+        <p data-i18n="card1_desc">HP, Dell, Lenovo, Asus, Acer आदि सभी ब्रांड्स के लैपटॉप की रिपेयरिंग।</p>
         <ul>
           <li>टूटी हुई स्क्रीन और हिंज (Hinges) रिपेयर</li>
           <li>नया कीबोर्ड, चार्जर और बैटरी</li>
@@ -50,8 +54,8 @@
       </div>
 
       <div class="card">
-        <h3>📹 CCTV कैमरा इंस्टॉलेशन व सर्विस</h3>
-        <p>घर, स्कूल, अस्पताल, दुकान और ऑफिस के लिए सिक्योरिटी कैमरा सेटअप।</p>
+        <h3 data-i18n="card3_title">📹 CCTV कैमरा इंस्टॉलेशन व सर्विस</h3>
+        <p data-i18n="card3_desc">घर, स्कूल, अस्पताल, दुकान और ऑफिस के लिए सिक्योरिटी कैमरा सेटअप।</p>
         <ul>
           <li>Indoor और Outdoor HD कैमरे</li>
           <li>IP कैमरा और WiFi स्मार्ट कैमरा</li>
@@ -63,8 +67,8 @@
       </div>
 
       <div class="card">
-        <h3>🖥️ डेस्कटॉप व सॉफ्टवेयर सपोर्ट</h3>
-        <p>ऑफिस और घर के लिए कस्टम पीसी और सॉफ्टवेयर समाधान।</p>
+        <h3 data-i18n="card2_title">🖥️ डेस्कटॉप व सॉफ्टवेयर सपोर्ट</h3>
+        <p data-i18n="card2_desc">ऑफिस और घर के लिए कस्टम पीसी और सॉफ्टवेयर समाधान।</p>
         <ul>
           <li>नया कंप्यूटर असेंबलिंग</li>
           <li>Windows इंस्टॉलेशन और फॉर्मेटिंग</li>

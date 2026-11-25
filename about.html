@@ -19,12 +19,16 @@
       </a>
       <nav>
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="about.html" class="active">About Us</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="login.html" class="btn-login-nav">Official Login</a></li>
+          <li><a href="index.html" data-i18n="nav_home">होम (Home)</a></li>
+          <li><a href="services.html" data-i18n="nav_services">सेवाएं (Services)</a></li>
+          <li><a href="about.html" class="active" data-i18n="nav_about">हमारे बारे में</a></li>
+          <li><a href="contact.html" data-i18n="nav_contact">संपर्क करें</a></li>
+          <li><a href="login.html" class="btn-login-nav" data-i18n="nav_login">ऑफिशियल लॉगिन</a></li>
         </ul>
+        <div class="topbar-controls">
+          <button id="langToggleBtn" class="control-btn" onclick="toggleLanguage()">🌐 English</button>
+          <button id="themeToggleBtn" class="control-btn" onclick="toggleTheme()">🌙 Dark</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -32,7 +36,7 @@
   <section class="section">
     <div class="card" style="max-width: 850px; margin: auto; text-align: center;">
       <div style="width: 150px; height: 150px; margin: 0 auto 1.5rem;" class="inject-logo"></div>
-      <h2 style="color: var(--primary-dark); margin-bottom: 1rem;">Sandeep Computer World के बारे में</h2>
+      <h2 style="margin-bottom: 1rem;" data-i18n="about_title">Sandeep Computer World के बारे में</h2>
       <p style="font-size: 1.05rem; color: var(--muted); margin-bottom: 1.25rem;">
         <strong>संदीप कंप्यूटर वर्ल्ड (Sandeep Computer World)</strong> जीयनपुर, आज़मगढ़ का एक प्रमुख और विश्वसनीय कंप्यूटर, लैपटॉप रिपेयरिंग और CCTV सिक्योरिटी सर्विस सेंटर है। इसके संस्थापक और मुख्य संचालक <strong>संदीप यादव (Sandeep Yadav)</strong> हैं।
       </p>
@@ -41,15 +45,15 @@
       </p>
 
       <div class="grid-3" style="text-align: left; margin-top: 2rem;">
-        <div class="card" style="background: #f8fafc;">
+        <div class="card">
           <h3>✅ अनुभवी सर्विस</h3>
           <p>संदीप यादव जी की देखरेख में सटीक जांच और भरोसेमंद रिपेयरिंग।</p>
         </div>
-        <div class="card" style="background: #f8fafc;">
+        <div class="card">
           <h3>✅ ओरिजिनल पार्ट्स</h3>
           <p>कंप्यूटर, लैपटॉप और CCTV में केवल क्वालिटी पार्ट्स और कैमरों का उपयोग।</p>
         </div>
-        <div class="card" style="background: #f8fafc;">
+        <div class="card">
           <h3>✅ ऑन-साइट सपोर्ट</h3>
           <p>जीयनपुर और आसपास के क्षेत्रों में CCTV इंस्टॉलेशन व सर्विस की सुविधा।</p>
         </div>
