@@ -194,6 +194,12 @@ nav a:hover, nav a.active {
 .section-title h2 { font-size: 1.9rem; }
 .section-title p { color: var(--muted); }
 
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.25rem;
+}
+
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -215,7 +221,7 @@ nav a:hover, nav a.active {
   margin-bottom: 1.25rem;
 }
 
-.card h3 { color: #2563eb; margin-bottom: 0.65rem; font-size: 1.2rem; }
+.card h3 { color: #2563eb; margin-bottom: 0.65rem; font-size: 1.15rem; }
 body.dark-theme .card h3 { color: var(--accent); }
 .card ul { margin-left: 1.2rem; color: var(--muted); }
 
@@ -263,7 +269,7 @@ body.dark-theme .card h3 { color: var(--accent); }
 /* Tick Options (Payment Mode & Status) */
 .tick-group {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -271,19 +277,19 @@ body.dark-theme .card h3 { color: var(--accent); }
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0.5rem 0.9rem;
+  padding: 0.45rem 0.85rem;
   border: 1.5px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   background: var(--input-bg);
 }
 
 .tick-option input[type="radio"] {
   accent-color: #0b3c8a;
-  width: 17px;
-  height: 17px;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
 }
 
@@ -383,22 +389,22 @@ body.dark-theme .card h3 { color: var(--accent); }
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 1.25rem;
+  padding: 1.2rem;
   border-left: 5px solid var(--primary);
 }
 
-.stat-card h4 { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; }
-.stat-card .stat-val { font-size: 1.65rem; font-weight: 800; margin-top: 0.35rem; }
+.stat-card h4 { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; }
+.stat-card .stat-val { font-size: 1.55rem; font-weight: 800; margin-top: 0.3rem; }
 
 /* Data Tables */
 .table-responsive { overflow-x: auto; }
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 .data-table th, .data-table td {
-  padding: 0.7rem 0.8rem;
+  padding: 0.65rem 0.75rem;
   border-bottom: 1px solid var(--border);
   text-align: left;
 }
@@ -410,26 +416,67 @@ body.dark-theme .card h3 { color: var(--accent); }
 .status-pill {
   padding: 3px 9px;
   border-radius: 50px;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 700;
   display: inline-block;
 }
 .pill-paid { background: #dcfce7; color: #166534; }
 .pill-due { background: #fee2e2; color: #991b1b; }
-.pill-pending { background: #fef9c3; color: #854d0e; }
 
-/* A4 Invoice Box */
-.bill-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-.bill-table th, .bill-table td { border: 1px solid #94a3b8; padding: 0.55rem; text-align: left; color: #0f172a; font-size: 0.92rem; }
-.bill-table th { background: #062559; color: #fff; }
-
+/* ==================== RIGID A4 INVOICE LAYOUT (NO SHIFT ON PRINT/PDF) ==================== */
 .invoice-preview-box {
   background: #ffffff !important;
   color: #0f172a !important;
   border: 2px solid #062559;
-  padding: 2rem;
-  border-radius: 8px;
+  padding: 18mm 15mm;
+  border-radius: 6px;
   margin-top: 1.5rem;
+  width: 100%;
+  max-width: 210mm;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.inv-header-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-bottom: 2px solid #062559;
+  margin-bottom: 12px;
+}
+.inv-header-table td {
+  vertical-align: top;
+  padding-bottom: 10px;
+}
+
+.inv-cust-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  margin-bottom: 12px;
+}
+.inv-cust-table td {
+  padding: 8px 10px;
+  vertical-align: top;
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+.bill-table { width: 100%; border-collapse: collapse; margin: 10px 0; table-layout: fixed; }
+.bill-table th, .bill-table td { border: 1px solid #94a3b8; padding: 6px 8px; text-align: left; color: #0f172a; font-size: 0.88rem; word-wrap: break-word; }
+.bill-table th { background: #062559 !important; color: #ffffff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+.inv-footer-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 35px;
+  border-top: 1px dashed #94a3b8;
+}
+.inv-footer-table td {
+  padding-top: 10px;
+  vertical-align: bottom;
+  font-size: 0.85rem;
+  color: #0f172a;
 }
 
 /* Floating WhatsApp & Footer */
@@ -465,21 +512,45 @@ footer { background: var(--primary-dark); color: #cbd5e1; padding: 2.5rem 1.25re
   .mobile-menu-btn { display: inline-block; }
   .hero-grid { grid-template-columns: 1fr; text-align: center; }
   .hero-btns { justify-content: center; }
+  .invoice-preview-box { padding: 1rem; }
 }
 
-/* A4 Print Rules */
-@page { size: A4; margin: 12mm; }
+/* ==================== STRICT A4 PRINT & PDF MEDIA RULES ==================== */
+@page {
+  size: A4 portrait;
+  margin: 8mm;
+}
+
 @media print {
-  body * { visibility: hidden; }
-  #printableInvoice, #printableInvoice * { visibility: visible; }
-  #printableInvoice {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    border: none;
-    padding: 0;
-    margin: 0;
+  html, body {
+    width: 210mm;
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
-  .no-print { display: none !important; }
+  .erp-sidebar, .erp-topbar, .no-print {
+    display: none !important;
+  }
+  .erp-wrapper, .erp-main, .erp-content, .tab-panel {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  #printableInvoice {
+    display: block !important;
+    width: 194mm !important;
+    max-width: 194mm !important;
+    margin: 0 auto !important;
+    padding: 8mm !important;
+    border: 2px solid #062559 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+  #invoiceTypeTitle {
+    background: #062559 !important;
+    color: #facc15 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }

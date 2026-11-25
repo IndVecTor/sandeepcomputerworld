@@ -14,14 +14,15 @@
         <div class="brand-logo-box inject-logo"></div>
         <div class="brand-text">
           <h1>SANDEEP COMPUTER WORLD</h1>
-          <span>Official Staff &amp; Admin Portal</span>
+          <span data-i18n="login_sub_brand">ऑफिशियल स्टाफ एवं एडमिन पोर्टल</span>
         </div>
       </a>
       <nav>
         <ul>
-          <li><a href="index.html">← वापस Home पर जाएं</a></li>
+          <li><a href="index.html" data-i18n="back_home">← वापस Home पर जाएं</a></li>
         </ul>
         <div class="topbar-controls">
+          <button id="langToggleBtn" type="button" class="control-btn" onclick="toggleLanguage()">🌐 English</button>
           <button id="themeToggleBtn" type="button" class="control-btn" onclick="toggleTheme()">🌙 Dark</button>
         </div>
       </nav>
@@ -31,14 +32,14 @@
   <section class="section">
     <div class="card" style="max-width: 450px; margin: 1rem auto;">
       <div style="width: 100px; height: 100px; margin: 0 auto 1rem;" class="inject-logo"></div>
-      <h2 style="text-align: center; margin-bottom: 0.5rem;">Official Login</h2>
-      <p style="text-align: center; color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
+      <h2 style="text-align: center; margin-bottom: 0.5rem;" data-i18n="login_title">ऑफिशियल लॉगिन (Official Login)</h2>
+      <p style="text-align: center; color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;" data-i18n="login_desc">
         बिलिंग सिस्टम और एडमिन कंट्रोल के लिए लॉगिन करें
       </p>
 
       <form onsubmit="handleLogin(event)">
         <div class="form-group">
-          <label>लॉगिन प्रकार चुनें (Select Role)</label>
+          <label data-i18n="login_role_lbl">लॉगिन प्रकार चुनें (Select Role)</label>
           <select id="loginRole" class="form-control">
             <option value="owner">Shop Owner (संदीप यादव - Billing Panel)</option>
             <option value="superadmin">Super Admin (Social Links &amp; Site Control)</option>
@@ -46,16 +47,16 @@
         </div>
 
         <div class="form-group">
-          <label>Username</label>
+          <label data-i18n="login_user_lbl">यूज़रनेम (Username)</label>
           <input type="text" id="loginUser" class="form-control" placeholder="Username डालें" required />
         </div>
 
         <div class="form-group">
-          <label>Password</label>
+          <label data-i18n="login_pass_lbl">पासवर्ड (Password)</label>
           <input type="password" id="loginPass" class="form-control" placeholder="Password डालें" required />
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">🔐 सुरक्षित लॉगिन करें</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" data-i18n="login_btn">🔐 सुरक्षित लॉगिन करें</button>
       </form>
 
       <div style="margin-top: 1.5rem; padding: 0.75rem; background: rgba(148,163,184,0.15); border-radius: 6px; font-size: 0.85rem;">

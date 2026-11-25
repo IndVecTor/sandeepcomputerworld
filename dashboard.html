@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ERP &amp; Billing Dashboard | Sandeep Computer World</title>
   <link rel="stylesheet" href="css/style.css" />
+  <!-- html2pdf library for 1-Click A4 PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -37,7 +39,6 @@
 
     <!-- ==================== MAIN CONTENT AREA ==================== -->
     <div class="erp-main">
-      <!-- Topbar -->
       <div class="erp-topbar no-print">
         <div style="display: flex; align-items: center; gap: 10px;">
           <button class="mobile-menu-btn" onclick="document.getElementById('erpSidebar').classList.toggle('open')">☰ Menu</button>
@@ -51,34 +52,78 @@
 
       <div class="erp-content">
 
-        <!-- 1. OVERVIEW TAB -->
+        <!-- 1. EXPANDED DASHBOARD OVERVIEW TAB -->
         <div id="tab-overview" class="tab-panel active no-print">
-          <h2 style="margin-bottom: 1rem;">📊 बिज़नेस ओवरव्यू (Sandeep Computer World)</h2>
-          <div class="grid-4" style="margin-bottom: 1.5rem;">
-            <div class="stat-card" style="border-left-color: #16a34a;">
-              <h4>आज की कुल बिक्री (Today's Sales)</h4>
-              <div class="stat-val" id="statTodaySales">₹0.00</div>
-            </div>
-            <div class="stat-card" style="border-left-color: #dc2626;">
-              <h4>कुल बकाया (Total Due)</h4>
-              <div class="stat-val" id="statTotalDue">₹0.00</div>
-            </div>
-            <div class="stat-card" style="border-left-color: #2563eb;">
-              <h4>कुल बने हुए बिल (Total Bills)</h4>
-              <div class="stat-val" id="statTotalBills">0</div>
-            </div>
-            <div class="stat-card" style="border-left-color: #eab308;">
-              <h4>पेंडिंग रिपेयरिंग व ग्राहक</h4>
-              <div class="stat-val" id="statPendingRepairs" style="font-size: 1.25rem;">0</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+            <h2>📊 बिज़नेस ओवरव्यू (Sandeep Computer World)</h2>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn btn-primary btn-sm" onclick="switchTab('tab-create-bill', document.getElementById('navCreateBill'))">+ नया A4 बिल बनाएं</button>
+              <button class="btn btn-excel btn-sm" onclick="exportBillsExcel()">📥 Export Bills Excel</button>
             </div>
           </div>
 
-          <div class="card">
-            <h3>⚡ क्विक एक्शन (Quick Actions)</h3>
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
-              <button class="btn btn-primary" onclick="switchTab('tab-create-bill', document.getElementById('navCreateBill'))">🧾 नया A4 बिल बनाएं</button>
-              <button class="btn btn-excel" onclick="exportBillsExcel()">📥 सभी बिल Excel में डाउनलोड करें</button>
-              <button class="btn btn-excel" onclick="exportCustomersExcel()">📥 सभी ग्राहक Excel में डाउनलोड करें</button>
+          <!-- Top 6 KPI Metric Cards -->
+          <div class="grid-3" style="margin-bottom: 1.5rem;">
+            <div class="stat-card" style="border-left-color: #16a34a;">
+              <h4>आज की बिक्री (Today's Sales)</h4>
+              <div class="stat-val" id="statTodaySales">₹0.00</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #2563eb;">
+              <h4>इस महीने की कुल बिक्री (Month Sales)</h4>
+              <div class="stat-val" id="statMonthSales">₹0.00</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #dc2626;">
+              <h4>कुल बकाया राशि (Total Due)</h4>
+              <div class="stat-val" id="statTotalDue">₹0.00</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #0d9488;">
+              <h4>Cash vs UPI कलेक्शन</h4>
+              <div class="stat-val" id="statCashUpi" style="font-size: 1.15rem;">Cash: ₹0 | UPI: ₹0</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #eab308;">
+              <h4>रिपेयरिंग स्थिति (Pending / Ready)</h4>
+              <div class="stat-val" id="statRepairBreakdown" style="font-size: 1.15rem;">Pending: 0 | Ready: 0</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #7c3aed;">
+              <h4>कुल बिल व सेव ग्राहक</h4>
+              <div class="stat-val" id="statBillsCustomers" style="font-size: 1.15rem;">0 Bills | 0 Customers</div>
+            </div>
+          </div>
+
+          <!-- Recent Bills & Pending Dues Side-by-Side -->
+          <div class="grid-2">
+            <div class="card">
+              <h3>🕒 हाल ही में बने 5 बिल (Recent Bills)</h3>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Bill No</th>
+                      <th>Customer</th>
+                      <th>Amount</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overviewRecentBills"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>⚠️ बकाया वाले प्रमुख ग्राहक (Top Pending Dues)</h3>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Customer</th>
+                      <th>Bill No</th>
+                      <th>Due (₹)</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overviewTopDues"></tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -89,9 +134,8 @@
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
               <div>
                 <h2>🧾 नया A4 इनवॉइस बनाएं (A4 Billing System)</h2>
-                <p style="color: var(--muted); font-size: 0.9rem;">ग्राहक का डेटा एक बार सेव होने के बाद हमेशा के लिए ऑटो-सेव रहेगा</p>
+                <p style="color: var(--muted); font-size: 0.9rem;">सिर्फ मोबाइल नंबर डालें — पुराना ग्राहक होगा तो डेटा अपने आप आ जाएगा, नया होगा तो सेव हो जाएगा</p>
               </div>
-              <!-- GST ON/OFF TOGGLE -->
               <div style="background: #fef9c3; color: #0f172a; border: 1px solid #facc15; padding: 0.6rem 0.9rem; border-radius: 8px; display: flex; align-items: center; gap: 8px;">
                 <input type="checkbox" id="gstToggle" onchange="updateBillPreview()" style="width: 19px; height: 19px; cursor: pointer;" />
                 <label for="gstToggle" style="font-weight: 700; cursor: pointer; margin: 0;">GST जोड़ें</label>
@@ -99,11 +143,24 @@
               </div>
             </div>
 
+            <!-- Mobile Number First Auto-Lookup + Date + GSTIN -->
             <div class="grid-3">
               <div class="form-group">
-                <label>🔍 पुराने ग्राहक चुनें (Auto-Fill)</label>
-                <select id="savedCustSelect" class="form-control" onchange="fillSavedCustomer()"></select>
+                <label>📱 मोबाइल नंबर डालें (Auto-Fill Customer)*</label>
+                <input type="text" id="custPhone" class="form-control" placeholder="10 अंकों का मोबाइल नंबर लिखें..." oninput="handleMobileLookup(); updateBillPreview();" />
+                <small id="custLookupHint" style="color: #16a34a; font-weight: 600; display: none;">✅ पुराना ग्राहक मिल गया — डेटा भर दिया गया है!</small>
               </div>
+              <div class="form-group">
+                <label>👤 ग्राहक का नाम (Customer Name)*</label>
+                <input type="text" id="custName" class="form-control" placeholder="ग्राहक का नाम लिखें" oninput="updateBillPreview()" />
+              </div>
+              <div class="form-group">
+                <label>📍 पता (Address)</label>
+                <input type="text" id="custAddress" class="form-control" placeholder="गाँव / शहर" oninput="updateBillPreview()" />
+              </div>
+            </div>
+
+            <div class="grid-3">
               <div class="form-group">
                 <label>📅 बिल की तारीख (Bill Date)</label>
                 <input type="date" id="billDateInput" class="form-control" onchange="updateBillPreview()" />
@@ -114,35 +171,14 @@
               </div>
             </div>
 
-            <div class="grid-3">
-              <div class="form-group">
-                <label>ग्राहक का नाम (Customer Name)*</label>
-                <input type="text" id="custName" class="form-control" placeholder="ग्राहक का नाम लिखें" oninput="updateBillPreview()" />
-              </div>
-              <div class="form-group">
-                <label>मोबाइल नंबर (Mobile Number)</label>
-                <input type="text" id="custPhone" class="form-control" placeholder="10 अंकों का नंबर" oninput="autoFillByPhone(); updateBillPreview();" />
-              </div>
-              <div class="form-group">
-                <label>पता (Address)</label>
-                <input type="text" id="custAddress" class="form-control" placeholder="गाँव / शहर" oninput="updateBillPreview()" />
-              </div>
-            </div>
+            <!-- Smart Typeahead Datalist for Auto-Suggesting Items -->
+            <datalist id="stockSuggestionsDatalist"></datalist>
 
-            <!-- Quick Stock Selector -->
-            <div class="form-group" style="max-width: 500px; margin-top: 0.5rem;">
-              <label>⚡ रेट लिस्ट से सीधे आइटम जोड़ें:</label>
-              <div style="display: flex; gap: 8px;">
-                <select id="quickStockSelect" class="form-control"></select>
-                <button type="button" class="btn btn-primary" onclick="addFromStockList()">Add</button>
-              </div>
-            </div>
-
-            <h4 style="margin: 1rem 0 0.5rem;">बिल के आइटम व सर्विस:</h4>
+            <h4 style="margin: 1rem 0 0.4rem;">बिल के आइटम व सर्विस (नाम टाइप करते ही रेट लिस्ट से सुझाव दिखेगा और नया आइटम अपने आप सेव होगा):</h4>
             <div id="itemsContainer"></div>
             <button type="button" onclick="addItemRow()" class="btn btn-accent btn-sm" style="margin-top: 0.4rem;">+ नया आइटम जोड़ें</button>
 
-            <!-- Payment Mode & Status Ticks (No Typing Needed) -->
+            <!-- Payment Mode & Status Ticks -->
             <div class="grid-3" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
               <div class="form-group">
                 <label>💳 पेमेंट माध्यम (टिक करें):</label>
@@ -173,94 +209,114 @@
             </div>
           </div>
 
-          <!-- ==================== A4 STANDARD INVOICE PREVIEW ==================== -->
+          <!-- ==================== RIGID A4 INVOICE PREVIEW (FIXED ALIGNMENT) ==================== -->
           <div id="printableInvoice" class="invoice-preview-box">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #062559; padding-bottom: 1rem; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-              <div style="display: flex; align-items: center; gap: 15px;">
-                <div style="width: 75px; height: 75px;" class="inject-logo"></div>
-                <div>
-                  <h1 style="color: #062559; font-size: 1.55rem; margin: 0;">SANDEEP COMPUTER WORLD</h1>
-                  <p style="margin: 2px 0; font-weight: 600; color: #0f172a;">कंप्यूटर, लैपटॉप रिपेयरिंग व CCTV कैमरा इंस्टॉलेशन सेंटर</p>
-                  <p style="margin: 2px 0; font-size: 0.9rem; color: #334155;">📍 जीयनपुर, आज़मगढ़ (उ.प्र.) | 📞 7388245758 (प्रो. संदीप यादव)</p>
-                  <p id="printGstinRow" style="display: none; margin: 2px 0; font-size: 0.9rem; font-weight: 700; color: #0b3c8a;">GSTIN: <span id="prevGstin"></span></p>
-                </div>
-              </div>
-              <div style="text-align: right;">
-                <h3 id="invoiceTypeTitle" style="background: #062559; color: #facc15; padding: 5px 12px; border-radius: 4px; display: inline-block;">A4 CASH MEMO / INVOICE</h3>
-                <p style="margin-top: 6px; font-size: 0.9rem; color: #0f172a;"><strong>Bill No:</strong> <span id="prevBillNo">SCW-1001</span></p>
-                <p style="font-size: 0.9rem; color: #0f172a;"><strong>Date:</strong> <span id="prevDate"></span></p>
-              </div>
-            </div>
+            <!-- Fixed 2-Column Header Table so CASH MEMO & Details NEVER shift on print/PDF -->
+            <table class="inv-header-table">
+              <tr>
+                <td style="width: 66%;">
+                  <table style="border-collapse: collapse;">
+                    <tr>
+                      <td style="width: 78px; vertical-align: middle; padding-right: 12px;">
+                        <div style="width: 72px; height: 72px;" class="inject-logo"></div>
+                      </td>
+                      <td style="vertical-align: middle;">
+                        <h1 style="color: #062559; font-size: 1.45rem; margin: 0; line-height: 1.2;">SANDEEP COMPUTER WORLD</h1>
+                        <p style="margin: 3px 0; font-weight: 600; font-size: 0.88rem; color: #0f172a;">कंप्यूटर, लैपटॉप रिपेयरिंग व CCTV कैमरा इंस्टॉलेशन सेंटर</p>
+                        <p style="margin: 2px 0; font-size: 0.84rem; color: #334155;">📍 जीयनपुर, आज़मगढ़ (उ.प्र.) | 📞 7388245758 (प्रो. संदीप यादव)</p>
+                        <p id="printGstinRow" style="display: none; margin: 2px 0; font-size: 0.85rem; font-weight: 700; color: #0b3c8a;">GSTIN: <span id="prevGstin"></span></p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td style="width: 34%; text-align: right; vertical-align: top;">
+                  <div id="invoiceTypeTitle" style="background: #062559; color: #facc15; padding: 5px 10px; border-radius: 4px; display: inline-block; font-weight: 800; font-size: 0.9rem;">A4 CASH MEMO / INVOICE</div>
+                  <p style="margin-top: 8px; font-size: 0.88rem; color: #0f172a;"><strong>Bill No:</strong> <span id="prevBillNo">SCW-1001</span></p>
+                  <p style="margin-top: 3px; font-size: 0.88rem; color: #0f172a;"><strong>Date:</strong> <span id="prevDate"></span></p>
+                </td>
+              </tr>
+            </table>
 
-            <div style="background: #f8fafc; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border: 1px solid #cbd5e1; color: #0f172a; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-              <div>
-                <p><strong>ग्राहक का नाम:</strong> <span id="prevCustName">______________________</span></p>
-                <p style="margin-top: 4px;"><strong>मोबाइल:</strong> <span id="prevCustPhone">______________</span> &nbsp;|&nbsp; <strong>पता:</strong> <span id="prevCustAddress">______________________</span></p>
-              </div>
-              <div style="text-align: right;">
-                <p><strong>Payment Mode:</strong> <span id="prevPayMode">Cash</span></p>
-                <p style="margin-top: 4px;"><strong>Status:</strong> <span id="prevPayStatus">Paid (पूरा जमा)</span></p>
-              </div>
-            </div>
+            <!-- Fixed 2-Column Customer Info Table -->
+            <table class="inv-cust-table">
+              <tr>
+                <td style="width: 60%;">
+                  <p><strong>ग्राहक का नाम:</strong> <span id="prevCustName">______________________</span></p>
+                  <p style="margin-top: 4px;"><strong>मोबाइल:</strong> <span id="prevCustPhone">______________</span> &nbsp;|&nbsp; <strong>पता:</strong> <span id="prevCustAddress">______________________</span></p>
+                </td>
+                <td style="width: 40%; text-align: right;">
+                  <p><strong>Payment Mode:</strong> <span id="prevPayMode">Cash</span></p>
+                  <p style="margin-top: 4px;"><strong>Status:</strong> <span id="prevPayStatus">Paid (पूरा जमा)</span></p>
+                </td>
+              </tr>
+            </table>
 
             <table class="bill-table">
               <thead>
                 <tr>
-                  <th style="width: 45px;">क्र.</th>
+                  <th style="width: 38px;">क्र.</th>
                   <th>सामान / सर्विस का विवरण (Description)</th>
-                  <th style="width: 110px;">वारंटी (Warranty)</th>
-                  <th style="width: 70px;">मात्रा</th>
-                  <th style="width: 105px;">रेट (Rate ₹)</th>
-                  <th style="width: 115px;">कुल (Amount ₹)</th>
+                  <th style="width: 95px;">वारंटी</th>
+                  <th style="width: 55px;">मात्रा</th>
+                  <th style="width: 95px;">रेट (₹)</th>
+                  <th style="width: 105px;">कुल (₹)</th>
                 </tr>
               </thead>
               <tbody id="prevItemsBody"></tbody>
             </table>
 
-            <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
-              <table style="width: 300px; border-collapse: collapse; color: #0f172a;">
-                <tr>
-                  <td style="padding: 5px;"><strong>Sub Total:</strong></td>
-                  <td style="padding: 5px; text-align: right;">₹ <span id="prevSubTotal">0.00</span></td>
-                </tr>
-                <tr id="prevDiscountRow" style="display: none;">
-                  <td style="padding: 5px;">Discount:</td>
-                  <td style="padding: 5px; text-align: right;">- ₹ <span id="prevDiscount">0.00</span></td>
-                </tr>
-                <tr id="prevGstRow" style="display: none; color: #0b3c8a; font-weight: 600;">
-                  <td style="padding: 5px;">GST (<span id="prevGstRate">18</span>%):</td>
-                  <td style="padding: 5px; text-align: right;">+ ₹ <span id="prevGstAmount">0.00</span></td>
-                </tr>
-                <tr style="border-top: 2px solid #062559; font-size: 1.15rem; background: #fef9c3;">
-                  <td style="padding: 8px;"><strong>Grand Total:</strong></td>
-                  <td style="padding: 8px; text-align: right;"><strong>₹ <span id="prevGrandTotal">0.00</span></strong></td>
-                </tr>
-                <tr id="prevPaidRow" style="display: none; color: #166534;">
-                  <td style="padding: 5px;">Paid Amount:</td>
-                  <td style="padding: 5px; text-align: right;">₹ <span id="prevPaidAmount">0.00</span></td>
-                </tr>
-                <tr id="prevDueRow" style="display: none; color: #dc2626; font-weight: 700;">
-                  <td style="padding: 5px;">Balance Due (बकाया):</td>
-                  <td style="padding: 5px; text-align: right;">₹ <span id="prevDueAmount">0.00</span></td>
-                </tr>
-              </table>
-            </div>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+              <tr>
+                <td style="width: 55%; vertical-align: top;"></td>
+                <td style="width: 45%; vertical-align: top;">
+                  <table style="width: 100%; border-collapse: collapse; color: #0f172a; font-size: 0.92rem;">
+                    <tr>
+                      <td style="padding: 4px;"><strong>Sub Total:</strong></td>
+                      <td style="padding: 4px; text-align: right;">₹ <span id="prevSubTotal">0.00</span></td>
+                    </tr>
+                    <tr id="prevDiscountRow" style="display: none;">
+                      <td style="padding: 4px;">Discount:</td>
+                      <td style="padding: 4px; text-align: right;">- ₹ <span id="prevDiscount">0.00</span></td>
+                    </tr>
+                    <tr id="prevGstRow" style="display: none; color: #0b3c8a; font-weight: 600;">
+                      <td style="padding: 4px;">GST (<span id="prevGstRate">18</span>%):</td>
+                      <td style="padding: 4px; text-align: right;">+ ₹ <span id="prevGstAmount">0.00</span></td>
+                    </tr>
+                    <tr style="border-top: 2px solid #062559; font-size: 1.08rem; background: #fef9c3;">
+                      <td style="padding: 7px;"><strong>Grand Total:</strong></td>
+                      <td style="padding: 7px; text-align: right;"><strong>₹ <span id="prevGrandTotal">0.00</span></strong></td>
+                    </tr>
+                    <tr id="prevPaidRow" style="display: none; color: #166534;">
+                      <td style="padding: 4px;">Paid Amount:</td>
+                      <td style="padding: 4px; text-align: right;">₹ <span id="prevPaidAmount">0.00</span></td>
+                    </tr>
+                    <tr id="prevDueRow" style="display: none; color: #dc2626; font-weight: 700;">
+                      <td style="padding: 4px;">Balance Due (बकाया):</td>
+                      <td style="padding: 4px; text-align: right;">₹ <span id="prevDueAmount">0.00</span></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
 
-            <div style="display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 1rem; border-top: 1px dashed #94a3b8; font-size: 0.9rem; color: #0f172a;">
-              <div>
-                <p>नोट: बिका हुआ सामान वापस नहीं होगा। वारंटी कंपनी की शर्तों के अनुसार।</p>
-                <p style="margin-top: 4px; font-weight: 600;">धन्यवाद! फिर पधारें।</p>
-              </div>
-              <div style="text-align: center;">
-                <p style="margin-bottom: 25px;">हस्ताक्षर (Authorized Signatory)</p>
-                <strong>संदीप यादव (Sandeep Computer World)</strong>
-              </div>
-            </div>
+            <table class="inv-footer-table">
+              <tr>
+                <td style="width: 62%;">
+                  <p>नोट: बिका हुआ सामान वापस नहीं होगा। वारंटी कंपनी की शर्तों के अनुसार।</p>
+                  <p style="margin-top: 4px; font-weight: 600;">धन्यवाद! फिर पधारें।</p>
+                </td>
+                <td style="width: 38%; text-align: center;">
+                  <p style="margin-bottom: 24px;">हस्ताक्षर (Authorized Signatory)</p>
+                  <strong>संदीप यादव (Sandeep Computer World)</strong>
+                </td>
+              </tr>
+            </table>
           </div>
 
+          <!-- Action Buttons -->
           <div class="no-print" style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-            <button type="button" onclick="saveAndPrintInvoice()" class="btn btn-primary">💾 Save &amp; Print A4 Bill</button>
-            <button type="button" onclick="sendBillOnWhatsApp()" class="btn btn-whatsapp">📲 ग्राहक को WhatsApp पर भेजें</button>
+            <button type="button" onclick="saveAndPrintInvoice()" class="btn btn-primary">🖨️ Save &amp; Print A4 Bill</button>
+            <button type="button" onclick="downloadPdfAndShareWhatsApp()" class="btn btn-whatsapp">📄 Download PDF &amp; Send on WhatsApp</button>
           </div>
         </div>
 
@@ -373,7 +429,7 @@
         <div id="tab-stock" class="tab-panel no-print">
           <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-              <h2>📦 सामान व सर्विस रेट लिस्ट (Stock &amp; Rate List)</h2>
+              <h2>📦 सामान व सर्विस रेट लिस्ट (Auto-Updated Rate List)</h2>
               <button class="btn btn-excel" onclick="exportStockExcel()">📥 Export Rate List to Excel</button>
             </div>
 
