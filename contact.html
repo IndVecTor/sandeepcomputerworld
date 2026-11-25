@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us | Sandeep Computer World</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-logo-box inject-logo"></div>
+        <div class="brand-text">
+          <h1>SANDEEP COMPUTER WORLD</h1>
+          <span>जीयनपुर, आज़मगढ़ | Mob: 7388245758</span>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html" class="active">Contact</a></li>
+          <li><a href="login.html" class="btn-login-nav">Official Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>हमसे संपर्क करें (Contact Us)</h2>
+      <p>किसी भी पूछताछ या सर्विस बुकिंग के लिए सीधे कॉल या व्हाट्सएप करें</p>
+    </div>
+
+    <div class="grid-3" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+      <div class="card">
+        <h3>📍 दुकान का पता और संपर्क</h3>
+        <p style="margin-bottom: 0.75rem;"><strong>दुकान का नाम:</strong> Sandeep Computer World</p>
+        <p style="margin-bottom: 0.75rem;"><strong>संचालक (Owner):</strong> संदीप यादव (Sandeep Yadav)</p>
+        <p style="margin-bottom: 0.75rem;"><strong>मोबाइल / WhatsApp:</strong> <a href="tel:+917388245758">7388245758</a></p>
+        <p style="margin-bottom: 1rem;"><strong>पता:</strong> जीयनपुर, आज़मगढ़ (उत्तर प्रदेश)</p>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="tel:+917388245758" class="btn btn-primary">📞 Call Now</a>
+          <a href="https://wa.me/917388245758" target="_blank" class="btn btn-whatsapp">💬 WhatsApp</a>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <strong>सोशल मीडिया प्रोफाइल:</strong>
+          <div class="dynamic-socials social-links"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>✉️ सीधा WhatsApp मैसेज भेजें</h3>
+        <form onsubmit="sendWhatsAppMessage(event)">
+          <div class="form-group">
+            <label>आपका नाम</label>
+            <input type="text" id="waName" class="form-control" placeholder="अपना नाम लिखें" required />
+          </div>
+          <div class="form-group">
+            <label>सर्विस चुनें</label>
+            <select id="waService" class="form-control">
+              <option value="Laptop Repair">लैपटॉप रिपेयरिंग</option>
+              <option value="Computer Repair">कंप्यूटर रिपेयरिंग</option>
+              <option value="CCTV Installation">CCTV कैमरा इंस्टॉलेशन</option>
+              <option value="Other">अन्य पूछताछ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>आपका संदेश / पता</label>
+            <textarea id="waMsg" class="form-control" rows="4" placeholder="अपनी समस्या या पता लिखें..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-whatsapp" style="width: 100%;">WhatsApp पर भेजें ➤</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-bottom">
+      © 2026 Sandeep Computer World | प्रो. संदीप यादव (7388245758)
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
