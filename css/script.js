@@ -39,7 +39,7 @@ function generateLogoSVG(uid) {
   </svg>`;
 }
 
-// 2. Bilingual Dictionary (Public Pages + Login Page)
+// 2. Bilingual Dictionary
 const TRANSLATIONS = {
   hi: {
     nav_home: "होम (Home)", nav_services: "सेवाएं (Services)", nav_about: "हमारे बारे में", nav_contact: "संपर्क करें", nav_login: "ऑफिशियल लॉगिन",
@@ -64,8 +64,8 @@ const TRANSLATIONS = {
     login_sub_brand: "ऑफिशियल स्टाफ एवं एडमिन पोर्टल",
     back_home: "← वापस Home पर जाएं",
     login_title: "ऑफिशियल लॉगिन (Official Login)",
-    login_desc: "बिलिंग सिस्टम और एडमिन कंट्रोल के लिए लॉगिन करें",
-    login_role_lbl: "लॉगिन प्रकार चुनें (Select Role)",
+    login_desc: "बिलिंग सिस्टम, एनालिटिक्स और एडमिन कंट्रोल के लिए लॉगिन करें",
+    login_role_lbl: "यूज़र / पद चुनें (Select User Account)",
     login_user_lbl: "यूज़रनेम (Username)",
     login_pass_lbl: "पासवर्ड (Password)",
     login_btn: "🔐 सुरक्षित लॉगिन करें"
@@ -93,8 +93,8 @@ const TRANSLATIONS = {
     login_sub_brand: "Official Staff & Admin Portal",
     back_home: "← Back to Home",
     login_title: "Official Login",
-    login_desc: "Sign in to access the Billing ERP & Admin Control Panel",
-    login_role_lbl: "Select Login Role",
+    login_desc: "Sign in to access the Billing ERP, Analytics & Admin Panel",
+    login_role_lbl: "Select User Account",
     login_user_lbl: "Username",
     login_pass_lbl: "Password",
     login_btn: "🔐 Login Securely"
@@ -134,7 +134,7 @@ function applyLanguage(lang) {
 // 4. Social Links
 function getSocialConfig() {
   const saved = localStorage.getItem("scw_social_links");
-  return saved ? JSON.parse(saved) : { facebook: "https://facebook.com", instagram: "https://instagram.com" };
+  return saved ? JSON.parse(saved) : { facebook: "https://facebook.com", instagram: "https://instagram.com", defaultGstin: "" };
 }
 
 function renderSocialLinks() {
@@ -157,26 +157,58 @@ function sendWhatsAppMessage(event) {
   window.open(`https://wa.me/${OWNER_WA}?text=${text}`, "_blank");
 }
 
-// 6. Official Login & Logout
+// ==================== 6. DYNAMIC USER MANAGEMENT & SECURE LOGIN ====================
+function getSystemUsers() {
+  const saved = localStorage.getItem("scw_system_users");
+  if (saved) return JSON.parse(saved);
+
+  const defaultUsers = [
+    { id: "usr_owner_1", displayName: "Shop Owner (संदीप यादव - Billing & Analytics)", username: "sandeep", password: "sandeep123", role: "owner" },
+    { id: "usr_admin_1", displayName: "Super Admin (Full System & User Control)", username: "admin", password: "admin123", role: "superadmin" }
+  ];
+  localStorage.setItem("scw_system_users", JSON.stringify(defaultUsers));
+  return defaultUsers;
+}
+
+function initLoginPage() {
+  const select = document.getElementById("loginUserSelect");
+  if (!select) return;
+  const users = getSystemUsers();
+  select.innerHTML = users.map(u => `<option value="${u.id}">${u.displayName}</option>`).join("");
+}
+
 function handleLogin(event) {
   if (event) event.preventDefault();
-  const role = document.getElementById("loginRole").value;
-  const user = document.getElementById("loginUser").value.trim().toLowerCase();
-  const pass = document.getElementById("loginPass").value.trim();
+  const selectedId = document.getElementById("loginUserSelect").value;
+  const userInput = document.getElementById("loginUser").value.trim().toLowerCase();
+  const passInput = document.getElementById("loginPass").value.trim();
 
-  if (role === "owner" && user === "sandeep" && pass === "sandeep123") {
-    localStorage.setItem("scw_auth_role", "owner");
-    window.location.href = "dashboard.html";
-  } else if (role === "superadmin" && user === "admin" && pass === "admin123") {
-    localStorage.setItem("scw_auth_role", "superadmin");
+  const users = getSystemUsers();
+  const account = users.find(u => u.id === selectedId);
+
+  if (account && account.username.toLowerCase() === userInput && account.password === passInput) {
+    localStorage.setItem("scw_auth_role", account.role);
+    localStorage.setItem("scw_auth_user", JSON.stringify(account));
+
+    // Record Login Audit Log
+    const logs = getDB("scw_login_logs", []);
+    logs.unshift({
+      time: new Date().toLocaleString("hi-IN"),
+      displayName: account.displayName,
+      username: account.username,
+      role: account.role
+    });
+    setDB("scw_login_logs", logs.slice(0, 100));
+
     window.location.href = "dashboard.html";
   } else {
-    alert("❌ गलत यूज़रनेम या पासवर्ड!\n\nShop Owner: sandeep / sandeep123\nSuper Admin: admin / admin123");
+    alert("❌ गलत यूज़रनेम या पासवर्ड! कृपया सही जानकारी डालें।");
   }
 }
 
 function logoutUser() {
   localStorage.removeItem("scw_auth_role");
+  localStorage.removeItem("scw_auth_user");
   window.location.href = "login.html";
 }
 
@@ -219,11 +251,13 @@ function switchTab(tabId, btnEl) {
   document.getElementById("erpSidebar")?.classList.remove("open");
 
   if (tabId === "tab-overview") refreshOverviewStats();
+  if (tabId === "tab-analytics") renderBusinessAnalytics();
   if (tabId === "tab-bills") renderBillsTable();
   if (tabId === "tab-customers") renderCustomersTable();
   if (tabId === "tab-repairs") renderRepairsTable();
   if (tabId === "tab-stock") renderStockTable();
   if (tabId === "tab-due") renderDueTable();
+  if (tabId === "tab-superadmin") renderSuperAdminUsers();
 }
 
 function initDashboard() {
@@ -231,19 +265,30 @@ function initDashboard() {
   if (!wrapper) return;
 
   const role = localStorage.getItem("scw_auth_role");
+  const activeUserRaw = localStorage.getItem("scw_auth_user");
+  const activeUser = activeUserRaw ? JSON.parse(activeUserRaw) : null;
+
   if (!role) {
     window.location.href = "login.html";
     return;
   }
 
+  const socials = getSocialConfig();
+  if (socials.defaultGstin && document.getElementById("shopGstin")) {
+    document.getElementById("shopGstin").value = socials.defaultGstin;
+  }
+
   if (role === "superadmin") {
     document.getElementById("superAdminNavItem").style.display = "block";
-    document.getElementById("roleBadge").innerText = "Super Admin & Billing ERP";
-    const socials = getSocialConfig();
-    document.getElementById("adminFbUrl").value = socials.facebook;
-    document.getElementById("adminIgUrl").value = socials.instagram;
+    document.getElementById("roleBadge").innerText = `🛡️ ${activeUser ? activeUser.displayName : "Super Admin"}`;
+    document.getElementById("adminFbUrl").value = socials.facebook || "";
+    document.getElementById("adminIgUrl").value = socials.instagram || "";
+    if (document.getElementById("adminDefaultGstin")) {
+      document.getElementById("adminDefaultGstin").value = socials.defaultGstin || "";
+    }
+    renderSuperAdminUsers();
   } else {
-    document.getElementById("roleBadge").innerText = "Shop Owner: Sandeep Yadav";
+    document.getElementById("roleBadge").innerText = `👤 ${activeUser ? activeUser.displayName : "Shop Owner: Sandeep Yadav"}`;
   }
 
   if (getDB("scw_stock", null) === null) {
@@ -512,9 +557,7 @@ function persistCurrentBill() {
   return billData;
 }
 
-// ==================== 4 SEPARATE 1-CLICK BILL ACTIONS ====================
-
-// Action 1: Print A4 Bill
+// 4 Separate Bill Actions
 function saveAndPrintInvoice() {
   const saved = persistCurrentBill();
   if (!saved) return;
@@ -522,7 +565,6 @@ function saveAndPrintInvoice() {
   updateNextBillNo();
 }
 
-// Helper: Generate Non-Blank High-Resolution A4 PDF Blob using html2canvas + jsPDF
 async function createNonBlankPdfBlob(billData) {
   const element = document.getElementById("printableInvoice");
   const canvas = await html2canvas(element, {
@@ -546,7 +588,6 @@ async function createNonBlankPdfBlob(billData) {
   return pdf.output("blob");
 }
 
-// Action 2: 1-Click Download PDF Only (Guaranteed Full Bill, Never Blank)
 async function downloadPdfOnly() {
   const billData = persistCurrentBill();
   if (!billData) return;
@@ -566,7 +607,6 @@ async function downloadPdfOnly() {
   }
 }
 
-// Action 3: 1-Click Send PDF Bill on WhatsApp
 async function sendPdfOnWhatsApp() {
   const billData = persistCurrentBill();
   if (!billData) return;
@@ -582,7 +622,6 @@ async function sendPdfOnWhatsApp() {
     const filename = `${billData.billNo}_${billData.custName.replace(/\s+/g, "_")}.pdf`;
     const pdfFile = new File([pdfBlob], filename, { type: "application/pdf" });
 
-    // Mobile / Supported Browsers: Direct Native PDF File Share to WhatsApp
     if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
       await navigator.share({
         files: [pdfFile],
@@ -593,7 +632,6 @@ async function sendPdfOnWhatsApp() {
       return;
     }
 
-    // Desktop Browsers: Auto-download PDF & immediately open Customer WhatsApp Web
     const dlLink = document.createElement("a");
     dlLink.href = URL.createObjectURL(pdfBlob);
     dlLink.download = filename;
@@ -610,7 +648,6 @@ async function sendPdfOnWhatsApp() {
   }
 }
 
-// Action 4: 1-Click Send Full Text Bill Details on WhatsApp (Without PDF)
 function sendTextDetailsOnWhatsApp() {
   const billData = persistCurrentBill();
   if (!billData) return;
@@ -636,7 +673,208 @@ function sendTextDetailsOnWhatsApp() {
   updateNextBillNo();
 }
 
-// ==================== 9. ALL BILLS (DATE FILTER & REPRINT) ====================
+// ==================== 9. HIGH-TECH ANALYTICS ENGINE ====================
+function renderBusinessAnalytics() {
+  const bills = getDB("scw_bills", []);
+  const logs = getDB("scw_login_logs", []);
+
+  const totalRev = bills.reduce((s, b) => s + Number(b.grandTotal || 0), 0);
+  const totalPaid = bills.reduce((s, b) => s + Number(b.paidAmount || 0), 0);
+  const totalGst = bills.reduce((s, b) => s + Number(b.gstAmount || 0), 0);
+  const avgBill = bills.length ? totalRev / bills.length : 0;
+  const collectionRate = totalRev > 0 ? Math.round((totalPaid / totalRev) * 100) : 100;
+
+  if (document.getElementById("anaTotalRev")) document.getElementById("anaTotalRev").innerText = "₹" + totalRev.toFixed(2);
+  if (document.getElementById("anaAvgBill")) document.getElementById("anaAvgBill").innerText = "₹" + avgBill.toFixed(2);
+  if (document.getElementById("anaCollectionRate")) document.getElementById("anaCollectionRate").innerText = collectionRate + "%";
+  if (document.getElementById("anaTotalGst")) document.getElementById("anaTotalGst").innerText = "₹" + totalGst.toFixed(2);
+
+  // Last 7 Days Visual Bar Chart
+  const chartBox = document.getElementById("ana7DaysChart");
+  if (chartBox) {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const iso = d.toISOString().slice(0, 10);
+      const daySales = bills.filter(b => b.date === iso).reduce((s, b) => s + Number(b.grandTotal || 0), 0);
+      days.push({ label: iso.slice(5), sales: daySales });
+    }
+    const maxSale = Math.max(...days.map(x => x.sales), 1);
+    chartBox.innerHTML = days.map(d => {
+      const pct = Math.round((d.sales / maxSale) * 100);
+      return `
+        <div style="margin-bottom: 10px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:3px;">
+            <span><strong>${d.label}</strong></span>
+            <span>₹${d.sales.toFixed(2)}</span>
+          </div>
+          <div style="background: rgba(148,163,184,0.2); height: 12px; border-radius: 6px; overflow: hidden;">
+            <div style="width: ${pct}%; background: linear-gradient(90deg, #0b3c8a, #2563eb); height: 100%; border-radius: 6px;"></div>
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  // Payment Mode Visual Share
+  const payBox = document.getElementById("anaPayModeChart");
+  if (payBox) {
+    const cashSum = bills.filter(b => b.payMode === "Cash").reduce((s, b) => s + Number(b.grandTotal || 0), 0);
+    const upiSum = bills.filter(b => (b.payMode || "").includes("UPI")).reduce((s, b) => s + Number(b.grandTotal || 0), 0);
+    const bankSum = bills.filter(b => (b.payMode || "").includes("Bank")).reduce((s, b) => s + Number(b.grandTotal || 0), 0);
+    const base = Math.max(totalRev, 1);
+
+    const modes = [
+      { name: "💵 Cash Payments", val: cashSum, color: "#16a34a" },
+      { name: "📱 UPI (PhonePe / GPay / BharatPe)", val: upiSum, color: "#2563eb" },
+      { name: "🏦 Bank / Card", val: bankSum, color: "#eab308" }
+    ];
+
+    payBox.innerHTML = modes.map(m => {
+      const pct = totalRev > 0 ? Math.round((m.val / base) * 100) : 0;
+      return `
+        <div style="margin-bottom: 14px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.88rem; margin-bottom:4px;">
+            <strong>${m.name}</strong>
+            <span>₹${m.val.toFixed(2)} (${pct}%)</span>
+          </div>
+          <div style="background: rgba(148,163,184,0.2); height: 14px; border-radius: 6px; overflow: hidden;">
+            <div style="width: ${pct}%; background: ${m.color}; height: 100%;"></div>
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  // Top 5 Items
+  const itemMap = {};
+  bills.forEach(b => {
+    (b.items || []).forEach(it => {
+      const k = it.desc || "Service";
+      if (!itemMap[k]) itemMap[k] = { qty: 0, rev: 0 };
+      itemMap[k].qty += Number(it.qty || 0);
+      itemMap[k].rev += Number(it.amount || 0);
+    });
+  });
+  const topItems = Object.entries(itemMap).sort((a, b) => b[1].rev - a[1].rev).slice(0, 5);
+  const topBody = document.getElementById("anaTopItemsBody");
+  if (topBody) {
+    topBody.innerHTML = topItems.length ? topItems.map(([name, st], idx) => `
+      <tr>
+        <td>${idx + 1}</td>
+        <td><strong>${name}</strong></td>
+        <td>${st.qty}</td>
+        <td>₹${st.rev.toFixed(2)}</td>
+      </tr>
+    `).join("") : `<tr><td colspan="4" style="text-align:center;">पर्याप्त डेटा उपलब्ध नहीं है।</td></tr>`;
+  }
+
+  // Login Logs
+  const logsBody = document.getElementById("anaLoginLogsBody");
+  if (logsBody) {
+    logsBody.innerHTML = logs.length ? logs.map(l => `
+      <tr>
+        <td><small>${l.time}</small></td>
+        <td><strong>${l.displayName}</strong></td>
+        <td><span class="status-pill pill-paid">${l.role}</span></td>
+      </tr>
+    `).join("") : `<tr><td colspan="3" style="text-align:center;">कोई लॉगिन रिकॉर्ड नहीं।</td></tr>`;
+  }
+}
+
+function exportAnalyticsReport() {
+  const bills = getDB("scw_bills", []);
+  const headers = ["Date", "Bill No", "Customer", "Payment Mode", "Status", "SubTotal", "Discount", "GST", "Grand Total", "Paid", "Due"];
+  const rows = bills.map(b => [b.date, b.billNo, b.custName, b.payMode, b.payStatus, b.subTotal, b.discount, b.gstAmount, b.grandTotal, b.paidAmount, b.dueAmount]);
+  exportTableToExcel("SCW_Business_Analytics", headers, rows);
+}
+
+function exportLogsExcel() {
+  const logs = getDB("scw_login_logs", []);
+  exportTableToExcel("SCW_Login_Audit_Logs", ["Date & Time", "Display Name", "Username", "Role"], logs.map(l => [l.time, l.displayName, l.username, l.role]));
+}
+
+// ==================== 10. SUPER ADMIN USER MANAGEMENT ====================
+function createNewUserAccount(e) {
+  e.preventDefault();
+  const displayName = document.getElementById("newDispName").value.trim();
+  const username = document.getElementById("newUsername").value.trim().toLowerCase();
+  const password = document.getElementById("newPassword").value.trim();
+  const role = document.getElementById("newUserRole").value;
+
+  const users = getSystemUsers();
+  if (users.some(u => u.username.toLowerCase() === username)) {
+    alert("⚠️ यह Username पहले से मौजूद है! कृपया दूसरा Username चुनें।");
+    return;
+  }
+
+  users.push({
+    id: "usr_" + Date.now(),
+    displayName,
+    username,
+    password,
+    role
+  });
+  localStorage.setItem("scw_system_users", JSON.stringify(users));
+  e.target.reset();
+  renderSuperAdminUsers();
+  alert(`✅ नया यूज़र "${displayName}" बना दिया गया है! अब यह Official Login पेज पर दिखेगा।`);
+}
+
+function deleteSystemUser(id) {
+  let users = getSystemUsers();
+  if (users.length <= 1) {
+    alert("⚠️ कम से कम एक एडमिन अकाउंट होना अनिवार्य है!");
+    return;
+  }
+  if (!confirm("क्या आप वाकई इस यूज़र अकाउंट को हटाना चाहते हैं?")) return;
+  users = users.filter(u => u.id !== id);
+  localStorage.setItem("scw_system_users", JSON.stringify(users));
+  renderSuperAdminUsers();
+}
+
+function renderSuperAdminUsers() {
+  const tbody = document.getElementById("superAdminUsersBody");
+  if (!tbody) return;
+  const users = getSystemUsers();
+  tbody.innerHTML = users.map((u, idx) => `
+    <tr>
+      <td>${idx + 1}</td>
+      <td><strong>${u.displayName}</strong></td>
+      <td><code>${u.username}</code></td>
+      <td><code>${u.password}</code></td>
+      <td><span class="status-pill ${u.role === "superadmin" ? "pill-due" : "pill-paid"}">${u.role === "superadmin" ? "Super Admin" : "Shop Owner / Staff"}</span></td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteSystemUser('${u.id}')">Delete</button></td>
+    </tr>
+  `).join("");
+}
+
+function saveSocialLinks(e) {
+  e.preventDefault();
+  const fb = document.getElementById("adminFbUrl").value.trim();
+  const ig = document.getElementById("adminIgUrl").value.trim();
+  const defaultGstin = document.getElementById("adminDefaultGstin")?.value.trim() || "";
+  localStorage.setItem("scw_social_links", JSON.stringify({ facebook: fb, instagram: ig, defaultGstin }));
+  alert("✅ वेबसाइट सोशल मीडिया लिंक और सेटिंग्स अपडेट हो गई हैं!");
+}
+
+function exportFullSystemBackup() {
+  const backup = {
+    exportedAt: new Date().toISOString(),
+    users: getSystemUsers(),
+    bills: getDB("scw_bills", []),
+    customers: getDB("scw_customers", []),
+    repairs: getDB("scw_repairs", []),
+    stock: getDB("scw_stock", []),
+    socials: getSocialConfig()
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `SCW_Full_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+  link.click();
+}
+
+// ==================== 11. ALL BILLS, CUSTOMERS, REPAIRS, STOCK, DUE & OVERVIEW ====================
 function renderBillsTable() {
   const bills = getDB("scw_bills", []);
   const search = (document.getElementById("billSearchInput")?.value || "").toLowerCase();
@@ -703,7 +941,6 @@ function exportBillsExcel() {
   exportTableToExcel("SandeepComputerWorld_Bills", headers, rows);
 }
 
-// ==================== 10. SAVED CUSTOMERS ====================
 function renderCustomersTable() {
   const customers = getDB("scw_customers", []);
   const q = (document.getElementById("custSearchInput")?.value || "").toLowerCase();
@@ -737,7 +974,6 @@ function exportCustomersExcel() {
   exportTableToExcel("Saved_Customers", ["Name", "Mobile", "Address", "Last Visit"], customers.map(c => [c.name, c.phone, c.address, c.lastVisit]));
 }
 
-// ==================== 11. REPAIRING JOB SHEET ====================
 function addRepairJob(e) {
   e.preventDefault();
   const jobs = getDB("scw_repairs", []);
@@ -809,7 +1045,6 @@ function exportRepairsExcel() {
   exportTableToExcel("Repairing_Jobs", ["Job ID", "Date", "Customer", "Mobile", "Device", "Issue", "Est Cost", "Status"], jobs.map(j => [j.jobId, j.date, j.custName, j.custPhone, j.device, j.issue, j.estCost, j.status]));
 }
 
-// ==================== 12. STOCK & RATE LIST ====================
 function addStockItem(e) {
   e.preventDefault();
   const stock = getDB("scw_stock", []);
@@ -853,7 +1088,6 @@ function exportStockExcel() {
   exportTableToExcel("Stock_Rate_List", ["Item / Service Name", "Rate", "Warranty"], stock.map(s => [s.name, s.rate, s.warranty]));
 }
 
-// ==================== 13. DUE / UDHAAR KHATA ====================
 function renderDueTable() {
   const bills = getDB("scw_bills", []);
   const dueBills = bills.filter(b => Number(b.dueAmount) > 0);
@@ -890,7 +1124,6 @@ function exportDueExcel() {
   exportTableToExcel("Due_Udhaar_Khata", ["Bill No", "Date", "Customer", "Mobile", "Total", "Paid", "Due Amount"], dueBills.map(b => [b.billNo, b.date, b.custName, b.custPhone, b.grandTotal, b.paidAmount, b.dueAmount]));
 }
 
-// ==================== 14. EXPANDED OVERVIEW STATS & SUPER ADMIN ====================
 function refreshOverviewStats() {
   const bills = getDB("scw_bills", []);
   const customers = getDB("scw_customers", []);
@@ -942,14 +1175,6 @@ function refreshOverviewStats() {
   }
 }
 
-function saveSocialLinks(e) {
-  e.preventDefault();
-  const fb = document.getElementById("adminFbUrl").value.trim();
-  const ig = document.getElementById("adminIgUrl").value.trim();
-  localStorage.setItem("scw_social_links", JSON.stringify({ facebook: fb, instagram: ig }));
-  alert("✅ Facebook और Instagram लिंक मुख्य वेबसाइट पर अपडेट हो गए हैं!");
-}
-
 // Initialize on DOM Load
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".inject-logo").forEach((el, idx) => {
@@ -958,5 +1183,6 @@ document.addEventListener("DOMContentLoaded", () => {
   applyTheme(localStorage.getItem("scw_theme") || "light");
   applyLanguage(localStorage.getItem("scw_lang") || "hi");
   renderSocialLinks();
+  initLoginPage();
   initDashboard();
 });

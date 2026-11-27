@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ERP &amp; Billing Dashboard | Sandeep Computer World</title>
+  <title>ERP &amp; Analytics Dashboard | Sandeep Computer World</title>
   <link rel="stylesheet" href="css/style.css" />
-  <!-- Reliable html2canvas + jsPDF for 100% Non-Blank A4 PDF Generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -25,13 +24,14 @@
 
       <ul class="sidebar-menu">
         <li><button class="sidebar-btn active" onclick="switchTab('tab-overview', this)">📊 Dashboard Overview</button></li>
+        <li><button id="navAnalytics" class="sidebar-btn" onclick="switchTab('tab-analytics', this)">📈 Business Analytics</button></li>
         <li><button id="navCreateBill" class="sidebar-btn" onclick="switchTab('tab-create-bill', this)">🧾 Create A4 Bill</button></li>
         <li><button class="sidebar-btn" onclick="switchTab('tab-bills', this)">📂 All Bills (Date Filter)</button></li>
         <li><button class="sidebar-btn" onclick="switchTab('tab-customers', this)">👥 Saved Customers</button></li>
         <li><button class="sidebar-btn" onclick="switchTab('tab-repairs', this)">🔧 Repairing Job Sheet</button></li>
         <li><button class="sidebar-btn" onclick="switchTab('tab-stock', this)">📦 Stock &amp; Rate List</button></li>
         <li><button class="sidebar-btn" onclick="switchTab('tab-due', this)">💰 Due / Udhaar Khata</button></li>
-        <li id="superAdminNavItem" style="display: none;"><button class="sidebar-btn" onclick="switchTab('tab-superadmin', this)">⚙️ Super Admin Control</button></li>
+        <li id="superAdminNavItem" style="display: none;"><button class="sidebar-btn" style="border: 1px dashed var(--accent);" onclick="switchTab('tab-superadmin', this)">🛡️ Super Admin Hub</button></li>
         <li style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.75rem;">
           <button class="sidebar-btn" style="color: #fca5a5;" onclick="logoutUser()">🚪 Logout</button>
         </li>
@@ -53,12 +53,13 @@
 
       <div class="erp-content">
 
-        <!-- 1. EXPANDED DASHBOARD OVERVIEW TAB -->
+        <!-- 1. DASHBOARD OVERVIEW TAB -->
         <div id="tab-overview" class="tab-panel active no-print">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
             <h2>📊 बिज़नेस ओवरव्यू (Sandeep Computer World)</h2>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
               <button class="btn btn-primary btn-sm" onclick="switchTab('tab-create-bill', document.getElementById('navCreateBill'))">+ नया A4 बिल बनाएं</button>
+              <button class="btn btn-accent btn-sm" onclick="switchTab('tab-analytics', document.getElementById('navAnalytics'))">📈 पूरा Analytics देखें</button>
               <button class="btn btn-excel btn-sm" onclick="exportBillsExcel()">📥 Export Bills Excel</button>
             </div>
           </div>
@@ -127,7 +128,93 @@
           </div>
         </div>
 
-        <!-- 2. CREATE A4 BILL TAB -->
+        <!-- 2. DEDICATED HIGH-TECH ANALYTICS TAB -->
+        <div id="tab-analytics" class="tab-panel no-print">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <h2>📈 बिज़नेस इंटेलिजेंस एवं एनालिटिक्स (Business Analytics)</h2>
+              <p style="color: var(--muted); font-size: 0.9rem;">दुकान की कमाई, पेमेंट ट्रेंड, टॉप सर्विसेज़ और स्टाफ लॉगिन रिपोर्ट</p>
+            </div>
+            <button class="btn btn-excel btn-sm" onclick="exportAnalyticsReport()">📥 Download Analytics Report (Excel)</button>
+          </div>
+
+          <!-- Deep KPI Cards -->
+          <div class="grid-4" style="margin-bottom: 1.5rem;">
+            <div class="stat-card" style="border-left-color: #2563eb;">
+              <h4>कुल जीवनकाल बिक्री (All-Time Revenue)</h4>
+              <div class="stat-val" id="anaTotalRev">₹0.00</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #16a34a;">
+              <h4>औसत बिल राशि (Avg. Bill Value)</h4>
+              <div class="stat-val" id="anaAvgBill">₹0.00</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #0d9488;">
+              <h4>रिकवरी दर (Collection Rate)</h4>
+              <div class="stat-val" id="anaCollectionRate">100%</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #7c3aed;">
+              <h4>कुल GST संग्रह (Total GST Billed)</h4>
+              <div class="stat-val" id="anaTotalGst">₹0.00</div>
+            </div>
+          </div>
+
+          <!-- Visual Charts Grid -->
+          <div class="grid-2">
+            <!-- Last 7 Days Revenue Bar Chart -->
+            <div class="card">
+              <h3>📊 पिछले 7 दिनों की बिक्री ग्राफ़ (Last 7 Days Sales)</h3>
+              <div id="ana7DaysChart" style="margin-top: 1rem;"></div>
+            </div>
+
+            <!-- Payment Mode Distribution -->
+            <div class="card">
+              <h3>💳 पेमेंट माध्यम विश्लेषण (Payment Mode Share)</h3>
+              <div id="anaPayModeChart" style="margin-top: 1rem;"></div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <!-- Top Selling Items / Services -->
+            <div class="card">
+              <h3>🏆 सबसे ज़्यादा बिकने वाले टॉप 5 आइटम / सर्विस</h3>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>आइटम / सर्विस का नाम</th>
+                      <th>कुल मात्रा (Qty)</th>
+                      <th>कुल कमाई (₹)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="anaTopItemsBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Staff & Admin Login Audit Logs -->
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h3>🛡️ लॉगिन एवं एक्टिविटी ऑडिट लॉग</h3>
+                <button class="btn btn-excel btn-sm" onclick="exportLogsExcel()">📥 Export Logs</button>
+              </div>
+              <div class="table-responsive" style="max-height: 260px; overflow-y: auto;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>समय (Date &amp; Time)</th>
+                      <th>यूज़र (User)</th>
+                      <th>रोल (Role)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="anaLoginLogsBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. CREATE A4 BILL TAB -->
         <div id="tab-create-bill" class="tab-panel">
           <div class="card no-print">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
@@ -207,7 +294,6 @@
 
           <!-- ==================== CLEAN & PROFESSIONAL A4 INVOICE PREVIEW ==================== -->
           <div id="printableInvoice" class="invoice-preview-box">
-            <!-- Top Strip Banner -->
             <div style="background: #062559; color: #ffffff; padding: 14px 18px; border-radius: 6px 6px 0 0; margin-bottom: 14px;">
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
@@ -215,9 +301,9 @@
                     <div style="width: 66px; height: 66px; background: #fff; border-radius: 50%; padding: 2px;" class="inject-logo"></div>
                   </td>
                   <td style="vertical-align: middle; padding-left: 12px;">
-                    <div style="font-size: 1.45rem; font-weight: 900; color: #facc15; letter-spacing: 0.5px; line-height: 1.2;">SANDEEP COMPUTER WORLD</div>
+                    <div id="invShopTitle" style="font-size: 1.45rem; font-weight: 900; color: #facc15; letter-spacing: 0.5px; line-height: 1.2;">SANDEEP COMPUTER WORLD</div>
                     <div style="font-size: 0.86rem; color: #e2e8f0; margin-top: 3px;">कंप्यूटर, लैपटॉप रिपेयरिंग व CCTV कैमरा इंस्टॉलेशन सेंटर</div>
-                    <div style="font-size: 0.82rem; color: #cbd5e1; margin-top: 2px;">📍 जीयनपुर, आज़मगढ़ (उ.प्र.) &nbsp;|&nbsp; 📞 7388245758 (प्रो. संदीप यादव)</div>
+                    <div id="invShopMeta" style="font-size: 0.82rem; color: #cbd5e1; margin-top: 2px;">📍 जीयनपुर, आज़मगढ़ (उ.प्र.) &nbsp;|&nbsp; 📞 7388245758 (प्रो. संदीप यादव)</div>
                     <div id="printGstinRow" style="display: none; font-size: 0.84rem; font-weight: 700; color: #facc15; margin-top: 2px;">GSTIN: <span id="prevGstin"></span></div>
                   </td>
                   <td style="width: 185px; vertical-align: middle; text-align: right;">
@@ -231,7 +317,6 @@
               </table>
             </div>
 
-            <!-- Clean Customer & Payment Box -->
             <table style="width: 100%; border-collapse: collapse; background: #f8fafc; border: 1.5px solid #cbd5e1; margin-bottom: 14px;">
               <tr>
                 <td style="width: 58%; padding: 10px 12px; border-right: 1px solid #cbd5e1; vertical-align: top; font-size: 0.88rem; color: #0f172a;">
@@ -248,7 +333,6 @@
               </tr>
             </table>
 
-            <!-- Items Table -->
             <table class="bill-table">
               <thead>
                 <tr>
@@ -263,7 +347,6 @@
               <tbody id="prevItemsBody"></tbody>
             </table>
 
-            <!-- Totals Box -->
             <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
               <tr>
                 <td style="width: 54%; vertical-align: top; padding-right: 12px; font-size: 0.82rem; color: #475569;">
@@ -304,7 +387,6 @@
               </tr>
             </table>
 
-            <!-- Signature Footer -->
             <table class="inv-footer-table">
               <tr>
                 <td style="width: 58%;">
@@ -312,13 +394,12 @@
                 </td>
                 <td style="width: 42%; text-align: center;">
                   <p style="margin-bottom: 24px; color: #475569;">हस्ताक्षर (Authorized Signatory)</p>
-                  <strong style="color: #062559;">संदीप यादव (Sandeep Computer World)</strong>
+                  <strong id="invSignatoryName" style="color: #062559;">संदीप यादव (Sandeep Computer World)</strong>
                 </td>
               </tr>
             </table>
           </div>
 
-          <!-- ==================== 4 SEPARATE 1-CLICK ACTION BUTTONS ==================== -->
           <div class="no-print" style="margin-top: 1.5rem; display: flex; gap: 0.85rem; flex-wrap: wrap;">
             <button type="button" onclick="saveAndPrintInvoice()" class="btn btn-primary">🖨️ Print A4 Bill</button>
             <button type="button" onclick="downloadPdfOnly()" class="btn btn-accent">📥 1-Click Download PDF</button>
@@ -327,7 +408,7 @@
           </div>
         </div>
 
-        <!-- 3. ALL BILLS / DATE-WISE HISTORY TAB -->
+        <!-- 4. ALL BILLS / DATE-WISE HISTORY TAB -->
         <div id="tab-bills" class="tab-panel no-print">
           <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
@@ -369,7 +450,7 @@
           </div>
         </div>
 
-        <!-- 4. SAVED CUSTOMERS TAB -->
+        <!-- 5. SAVED CUSTOMERS TAB -->
         <div id="tab-customers" class="tab-panel no-print">
           <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
@@ -397,7 +478,7 @@
           </div>
         </div>
 
-        <!-- 5. REPAIRING JOB SHEET TAB -->
+        <!-- 6. REPAIRING JOB SHEET TAB -->
         <div id="tab-repairs" class="tab-panel no-print">
           <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
@@ -432,7 +513,7 @@
           </div>
         </div>
 
-        <!-- 6. STOCK & RATE LIST TAB -->
+        <!-- 7. STOCK & RATE LIST TAB -->
         <div id="tab-stock" class="tab-panel no-print">
           <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
@@ -464,7 +545,7 @@
           </div>
         </div>
 
-        <!-- 7. DUE / UDHAAR KHATA TAB -->
+        <!-- 8. DUE / UDHAAR KHATA TAB -->
         <div id="tab-due" class="tab-panel no-print">
           <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
@@ -489,22 +570,86 @@
           </div>
         </div>
 
-        <!-- 8. SUPER ADMIN TAB -->
+        <!-- 9. HIGH-TECH SUPER ADMIN COMMAND CENTER HUB -->
         <div id="tab-superadmin" class="tab-panel no-print">
-          <div class="card" style="max-width: 650px;">
-            <h2>⚙️ Super Admin Control Panel</h2>
-            <p style="color: var(--muted); margin-bottom: 1.25rem;">यहाँ से मुख्य वेबसाइट के Facebook और Instagram प्रोफाइल लिंक अपडेट करें।</p>
-            <form onsubmit="saveSocialLinks(event)">
-              <div class="form-group">
-                <label>📘 Facebook Profile / Page URL</label>
-                <input type="url" id="adminFbUrl" class="form-control" placeholder="https://facebook.com/sandeepcomputerworld" />
-              </div>
-              <div class="form-group">
-                <label>📸 Instagram Profile URL</label>
-                <input type="url" id="adminIgUrl" class="form-control" placeholder="https://instagram.com/sandeepcomputerworld" />
-              </div>
-              <button type="submit" class="btn btn-primary">💾 Save &amp; Update on Main Site</button>
-            </form>
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <h2>🛡️ Super Admin Command Center</h2>
+              <p style="color: var(--muted); font-size: 0.9rem;">नए यूज़र व पासवर्ड बनाएं, सोशल मीडिया लिंक बदलें, और सिस्टम डेटा कंट्रोल करें</p>
+            </div>
+            <button class="btn btn-excel btn-sm" onclick="exportFullSystemBackup()">💾 Full System Backup (JSON)</button>
+          </div>
+
+          <div class="grid-2">
+            <!-- Create New Login User & Password -->
+            <div class="card" style="border-top: 4px solid #2563eb;">
+              <h3>👤 नया यूज़र और पासवर्ड बनाएं (Create User Account)</h3>
+              <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;">यहाँ बनाया गया हर यूज़र सीधे Official Login पेज की लिस्ट में जुड़ जाएगा।</p>
+              <form onsubmit="createNewUserAccount(event)">
+                <div class="form-group">
+                  <label>पूरा नाम / पद नाम (Display Name)*</label>
+                  <input type="text" id="newDispName" class="form-control" placeholder="जैसे: Sandeep Yadav (Owner) या Staff 1" required />
+                </div>
+                <div class="grid-2" style="gap: 10px;">
+                  <div class="form-group">
+                    <label>यूज़रनेम (Login Username)*</label>
+                    <input type="text" id="newUsername" class="form-control" placeholder="जैसे: rahul" required />
+                  </div>
+                  <div class="form-group">
+                    <label>पासवर्ड (Login Password)*</label>
+                    <input type="text" id="newPassword" class="form-control" placeholder="नया पासवर्ड लिखें" required />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>एक्सेस अधिकार (Access Role)*</label>
+                  <select id="newUserRole" class="form-control">
+                    <option value="owner">Shop Owner / Staff (Billing + Analytics Access)</option>
+                    <option value="superadmin">Super Admin (Full Control + User Creation)</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">➕ नया यूज़र सेव करें (Add to Login)</button>
+              </form>
+            </div>
+
+            <!-- Social Media & Shop Identity Control -->
+            <div class="card" style="border-top: 4px solid #16a34a;">
+              <h3>🌐 वेबसाइट सोशल लिंक व शॉप सेटिंग्स</h3>
+              <form onsubmit="saveSocialLinks(event)">
+                <div class="form-group">
+                  <label>📘 Facebook Profile / Page URL</label>
+                  <input type="url" id="adminFbUrl" class="form-control" placeholder="https://facebook.com/sandeepcomputerworld" />
+                </div>
+                <div class="form-group">
+                  <label>📸 Instagram Profile URL</label>
+                  <input type="url" id="adminIgUrl" class="form-control" placeholder="https://instagram.com/sandeepcomputerworld" />
+                </div>
+                <div class="form-group">
+                  <label>🏛️ डिफ़ॉल्ट Shop GSTIN (वैकल्पिक)</label>
+                  <input type="text" id="adminDefaultGstin" class="form-control" placeholder="GSTIN नंबर यहाँ सेव रखें" />
+                </div>
+                <button type="submit" class="btn btn-whatsapp" style="width: 100%;">💾 Save All Website Settings</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Active Users List Table -->
+          <div class="card">
+            <h3>🔑 सक्रिय लॉगिन अकाउंट्स की सूची (Active Login Users)</h3>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Display Name (लॉगिन ड्रॉपडाउन नाम)</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="superAdminUsersBody"></tbody>
+              </table>
+            </div>
           </div>
         </div>
 

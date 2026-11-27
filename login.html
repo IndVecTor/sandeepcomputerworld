@@ -30,40 +30,31 @@
   </header>
 
   <section class="section">
-    <div class="card" style="max-width: 450px; margin: 1rem auto;">
+    <div class="card" style="max-width: 440px; margin: 1.5rem auto; padding: 2rem;">
       <div style="width: 100px; height: 100px; margin: 0 auto 1rem;" class="inject-logo"></div>
-      <h2 style="text-align: center; margin-bottom: 0.5rem;" data-i18n="login_title">ऑफिशियल लॉगिन (Official Login)</h2>
+      <h2 style="text-align: center; margin-bottom: 0.4rem;" data-i18n="login_title">ऑफिशियल लॉगिन (Official Login)</h2>
       <p style="text-align: center; color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;" data-i18n="login_desc">
-        बिलिंग सिस्टम और एडमिन कंट्रोल के लिए लॉगिन करें
+        बिलिंग सिस्टम, एनालिटिक्स और एडमिन कंट्रोल के लिए लॉगिन करें
       </p>
 
       <form onsubmit="handleLogin(event)">
         <div class="form-group">
-          <label data-i18n="login_role_lbl">लॉगिन प्रकार चुनें (Select Role)</label>
-          <select id="loginRole" class="form-control">
-            <option value="owner">Shop Owner (संदीप यादव - Billing Panel)</option>
-            <option value="superadmin">Super Admin (Social Links &amp; Site Control)</option>
-          </select>
+          <label data-i18n="login_role_lbl">यूज़र / पद चुनें (Select User Account)</label>
+          <select id="loginUserSelect" class="form-control" required></select>
         </div>
 
         <div class="form-group">
           <label data-i18n="login_user_lbl">यूज़रनेम (Username)</label>
-          <input type="text" id="loginUser" class="form-control" placeholder="Username डालें" required />
+          <input type="text" id="loginUser" class="form-control" placeholder="अपना Username डालें" autocomplete="off" required />
         </div>
 
         <div class="form-group">
           <label data-i18n="login_pass_lbl">पासवर्ड (Password)</label>
-          <input type="password" id="loginPass" class="form-control" placeholder="Password डालें" required />
+          <input type="password" id="loginPass" class="form-control" placeholder="अपना Password डालें" required />
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" data-i18n="login_btn">🔐 सुरक्षित लॉगिन करें</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.75rem; padding: 0.8rem;" data-i18n="login_btn">🔐 सुरक्षित लॉगिन करें</button>
       </form>
-
-      <div style="margin-top: 1.5rem; padding: 0.75rem; background: rgba(148,163,184,0.15); border-radius: 6px; font-size: 0.85rem;">
-        <strong>लॉगिन आईडी और पासवर्ड:</strong><br>
-        • <b>Shop Owner:</b> User: <code>sandeep</code> | Pass: <code>sandeep123</code><br>
-        • <b>Super Admin:</b> User: <code>admin</code> | Pass: <code>admin123</code>
-      </div>
     </div>
   </section>
 
