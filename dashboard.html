@@ -55,11 +55,13 @@
 
         <!-- 1. DASHBOARD OVERVIEW TAB -->
         <div id="tab-overview" class="tab-panel active no-print">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-            <h2>📊 बिज़नेस ओवरव्यू (Sandeep Computer World)</h2>
+          <div class="module-banner banner-overview">
+            <div>
+              <h2>📊 बिज़नेस ओवरव्यू (Command Dashboard)</h2>
+              <p style="font-size: 0.88rem; opacity: 0.9;">Sandeep Computer World — आज की बिक्री, बकाया और रिपेयरिंग स्टेटस</p>
+            </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button class="btn btn-primary btn-sm" onclick="switchTab('tab-create-bill', document.getElementById('navCreateBill'))">+ नया A4 बिल बनाएं</button>
-              <button class="btn btn-accent btn-sm" onclick="switchTab('tab-analytics', document.getElementById('navAnalytics'))">📈 पूरा Analytics देखें</button>
+              <button class="btn btn-accent btn-sm" onclick="switchTab('tab-create-bill', document.getElementById('navCreateBill'))">+ नया A4 बिल बनाएं</button>
               <button class="btn btn-excel btn-sm" onclick="exportBillsExcel()">📥 Export Bills Excel</button>
             </div>
           </div>
@@ -118,7 +120,7 @@
                       <th>Customer</th>
                       <th>Bill No</th>
                       <th>Due (₹)</th>
-                      <th>Action</th>
+                      <th>Reminder</th>
                     </tr>
                   </thead>
                   <tbody id="overviewTopDues"></tbody>
@@ -128,17 +130,16 @@
           </div>
         </div>
 
-        <!-- 2. DEDICATED HIGH-TECH ANALYTICS TAB -->
+        <!-- 2. DEDICATED ANALYTICS TAB -->
         <div id="tab-analytics" class="tab-panel no-print">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+          <div class="module-banner banner-analytics">
             <div>
-              <h2>📈 बिज़नेस इंटेलिजेंस एवं एनालिटिक्स (Business Analytics)</h2>
-              <p style="color: var(--muted); font-size: 0.9rem;">दुकान की कमाई, पेमेंट ट्रेंड, टॉप सर्विसेज़ और स्टाफ लॉगिन रिपोर्ट</p>
+              <h2>📈 बिज़नेस इंटेलिजेंस एवं एनालिटिक्स</h2>
+              <p style="font-size: 0.88rem; opacity: 0.9;">दुकान की कमाई, पेमेंट ट्रेंड, टॉप सर्विसेज़ और स्टाफ लॉगिन रिपोर्ट</p>
             </div>
-            <button class="btn btn-excel btn-sm" onclick="exportAnalyticsReport()">📥 Download Analytics Report (Excel)</button>
+            <button class="btn btn-excel btn-sm" onclick="exportAnalyticsReport()">📥 Download Analytics Report</button>
           </div>
 
-          <!-- Deep KPI Cards -->
           <div class="grid-4" style="margin-bottom: 1.5rem;">
             <div class="stat-card" style="border-left-color: #2563eb;">
               <h4>कुल जीवनकाल बिक्री (All-Time Revenue)</h4>
@@ -158,15 +159,11 @@
             </div>
           </div>
 
-          <!-- Visual Charts Grid -->
           <div class="grid-2">
-            <!-- Last 7 Days Revenue Bar Chart -->
             <div class="card">
               <h3>📊 पिछले 7 दिनों की बिक्री ग्राफ़ (Last 7 Days Sales)</h3>
               <div id="ana7DaysChart" style="margin-top: 1rem;"></div>
             </div>
-
-            <!-- Payment Mode Distribution -->
             <div class="card">
               <h3>💳 पेमेंट माध्यम विश्लेषण (Payment Mode Share)</h3>
               <div id="anaPayModeChart" style="margin-top: 1rem;"></div>
@@ -174,7 +171,6 @@
           </div>
 
           <div class="grid-2">
-            <!-- Top Selling Items / Services -->
             <div class="card">
               <h3>🏆 सबसे ज़्यादा बिकने वाले टॉप 5 आइटम / सर्विस</h3>
               <div class="table-responsive">
@@ -183,7 +179,7 @@
                     <tr>
                       <th>#</th>
                       <th>आइटम / सर्विस का नाम</th>
-                      <th>कुल मात्रा (Qty)</th>
+                      <th>कुल मात्रा</th>
                       <th>कुल कमाई (₹)</th>
                     </tr>
                   </thead>
@@ -192,7 +188,6 @@
               </div>
             </div>
 
-            <!-- Staff & Admin Login Audit Logs -->
             <div class="card">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                 <h3>🛡️ लॉगिन एवं एक्टिविटी ऑडिट लॉग</h3>
@@ -204,7 +199,7 @@
                     <tr>
                       <th>समय (Date &amp; Time)</th>
                       <th>यूज़र (User)</th>
-                      <th>रोल (Role)</th>
+                      <th>रोल</th>
                     </tr>
                   </thead>
                   <tbody id="anaLoginLogsBody"></tbody>
@@ -216,19 +211,19 @@
 
         <!-- 3. CREATE A4 BILL TAB -->
         <div id="tab-create-bill" class="tab-panel">
-          <div class="card no-print">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
-              <div>
-                <h2>🧾 नया A4 इनवॉइस बनाएं (A4 Billing System)</h2>
-                <p style="color: var(--muted); font-size: 0.9rem;">सिर्फ मोबाइल नंबर डालें — पुराना ग्राहक होगा तो डेटा अपने आप आ जाएगा, नया होगा तो सेव हो जाएगा</p>
-              </div>
-              <div style="background: #fef9c3; color: #0f172a; border: 1px solid #facc15; padding: 0.6rem 0.9rem; border-radius: 8px; display: flex; align-items: center; gap: 8px;">
-                <input type="checkbox" id="gstToggle" onchange="updateBillPreview()" style="width: 19px; height: 19px; cursor: pointer;" />
-                <label for="gstToggle" style="font-weight: 700; cursor: pointer; margin: 0;">GST जोड़ें</label>
-                <input type="number" id="gstPercent" value="18" min="0" max="28" onchange="updateBillPreview()" style="width: 55px; padding: 3px; border-radius: 4px; border: 1px solid #ccc; color: #0f172a; background: #fff;" />%
-              </div>
+          <div class="module-banner banner-billing no-print">
+            <div>
+              <h2>🧾 नया A4 इनवॉइस बनाएं (Smart A4 Billing Studio)</h2>
+              <p style="font-size: 0.88rem; opacity: 0.9;">सिर्फ मोबाइल नंबर डालें — पुराना ग्राहक ऑटो-फिल होगा और नया आइटम रेट लिस्ट में सेव होगा</p>
             </div>
+            <div style="background: #fef9c3; color: #0f172a; border: 1px solid #facc15; padding: 0.55rem 0.9rem; border-radius: 8px; display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" id="gstToggle" onchange="updateBillPreview()" style="width: 19px; height: 19px; cursor: pointer;" />
+              <label for="gstToggle" style="font-weight: 700; cursor: pointer; margin: 0;">GST जोड़ें</label>
+              <input type="number" id="gstPercent" value="18" min="0" max="28" onchange="updateBillPreview()" style="width: 55px; padding: 3px; border-radius: 4px; border: 1px solid #ccc; color: #0f172a; background: #fff;" />%
+            </div>
+          </div>
 
+          <div class="card no-print">
             <div class="grid-3">
               <div class="form-group">
                 <label>📱 मोबाइल नंबर डालें (Auto-Fill Customer)*</label>
@@ -258,7 +253,7 @@
 
             <datalist id="stockSuggestionsDatalist"></datalist>
 
-            <h4 style="margin: 1rem 0 0.4rem;">बिल के आइटम व सर्विस (नाम लिखते ही रेट लिस्ट से सुझाव दिखेगा और नया आइटम अपने आप सेव होगा):</h4>
+            <h4 style="margin: 1rem 0 0.4rem;">बिल के आइटम व सर्विस:</h4>
             <div id="itemsContainer"></div>
             <button type="button" onclick="addItemRow()" class="btn btn-accent btn-sm" style="margin-top: 0.4rem;">+ नया आइटम जोड़ें</button>
 
@@ -292,7 +287,7 @@
             </div>
           </div>
 
-          <!-- ==================== CLEAN & PROFESSIONAL A4 INVOICE PREVIEW ==================== -->
+          <!-- ==================== A4 INVOICE PREVIEW ==================== -->
           <div id="printableInvoice" class="invoice-preview-box">
             <div style="background: #062559; color: #ffffff; padding: 14px 18px; border-radius: 6px 6px 0 0; margin-bottom: 14px;">
               <table style="width: 100%; border-collapse: collapse;">
@@ -301,9 +296,9 @@
                     <div style="width: 66px; height: 66px; background: #fff; border-radius: 50%; padding: 2px;" class="inject-logo"></div>
                   </td>
                   <td style="vertical-align: middle; padding-left: 12px;">
-                    <div id="invShopTitle" style="font-size: 1.45rem; font-weight: 900; color: #facc15; letter-spacing: 0.5px; line-height: 1.2;">SANDEEP COMPUTER WORLD</div>
+                    <div style="font-size: 1.45rem; font-weight: 900; color: #facc15; letter-spacing: 0.5px; line-height: 1.2;">SANDEEP COMPUTER WORLD</div>
                     <div style="font-size: 0.86rem; color: #e2e8f0; margin-top: 3px;">कंप्यूटर, लैपटॉप रिपेयरिंग व CCTV कैमरा इंस्टॉलेशन सेंटर</div>
-                    <div id="invShopMeta" style="font-size: 0.82rem; color: #cbd5e1; margin-top: 2px;">📍 जीयनपुर, आज़मगढ़ (उ.प्र.) &nbsp;|&nbsp; 📞 7388245758 (प्रो. संदीप यादव)</div>
+                    <div style="font-size: 0.82rem; color: #cbd5e1; margin-top: 2px;">📍 जीयनपुर, आज़मगढ़ (उ.प्र.) &nbsp;|&nbsp; 📞 7388245758 (प्रो. संदीप यादव)</div>
                     <div id="printGstinRow" style="display: none; font-size: 0.84rem; font-weight: 700; color: #facc15; margin-top: 2px;">GSTIN: <span id="prevGstin"></span></div>
                   </td>
                   <td style="width: 185px; vertical-align: middle; text-align: right;">
@@ -394,7 +389,7 @@
                 </td>
                 <td style="width: 42%; text-align: center;">
                   <p style="margin-bottom: 24px; color: #475569;">हस्ताक्षर (Authorized Signatory)</p>
-                  <strong id="invSignatoryName" style="color: #062559;">संदीप यादव (Sandeep Computer World)</strong>
+                  <strong style="color: #062559;">संदीप यादव (Sandeep Computer World)</strong>
                 </td>
               </tr>
             </table>
@@ -408,18 +403,54 @@
           </div>
         </div>
 
-        <!-- 4. ALL BILLS / DATE-WISE HISTORY TAB -->
+        <!-- 4. ALL BILLS / DATE-WISE HISTORY TAB (NEW DISTINCT LOOK + SUMMARY CARDS + QUICK FILTERS) -->
         <div id="tab-bills" class="tab-panel no-print">
-          <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-              <h2>📂 सभी बिलों का रिकॉर्ड (Date-Wise Bill History)</h2>
-              <button class="btn btn-excel" onclick="exportBillsExcel()">📥 Export to Excel</button>
+          <div class="module-banner banner-allbills">
+            <div>
+              <h2>📂 बिल आर्काइव एवं लेजर (All Bills &amp; Date-Wise Explorer)</h2>
+              <p style="font-size: 0.88rem; opacity: 0.9;">किसी भी तारीख के पुराने बिल खोजें, पेमेंट स्टेटस फ़िल्टर करें, री-प्रिंट करें या WhatsApp पर भेजें</p>
             </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn btn-accent btn-sm" onclick="setBillDatePreset('today')">आज के बिल</button>
+              <button class="btn btn-primary btn-sm" onclick="setBillDatePreset('month')">इस महीने के बिल</button>
+              <button class="btn btn-sm" style="background:#fff; color:#0f172a;" onclick="setBillDatePreset('all')">सभी बिल दिखाएं</button>
+              <button class="btn btn-excel btn-sm" onclick="exportBillsExcel()">📥 Export Excel</button>
+            </div>
+          </div>
 
-            <div class="grid-3" style="margin-bottom: 1rem;">
+          <!-- Filtered Summary Strip -->
+          <div class="grid-4" style="margin-bottom: 1.25rem;">
+            <div class="stat-card" style="border-left-color: #2563eb;">
+              <h4>फ़िल्टर किए गए बिल (Count)</h4>
+              <div class="stat-val" id="filtBillCount">0</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #0d9488;">
+              <h4>कुल बिल राशि (Filtered Sales)</h4>
+              <div class="stat-val" id="filtBillTotal">₹0.00</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #16a34a;">
+              <h4>प्राप्त भुगतान (Filtered Paid)</h4>
+              <div class="stat-val" id="filtBillPaid">₹0.00</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #dc2626;">
+              <h4>शेष बकाया (Filtered Due)</h4>
+              <div class="stat-val" id="filtBillDue">₹0.00</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="grid-4" style="margin-bottom: 1rem;">
               <div class="form-group">
-                <label>🔍 नाम / बिल नंबर / मोबाइल से खोजें</label>
-                <input type="text" id="billSearchInput" class="form-control" placeholder="Search..." oninput="renderBillsTable()" />
+                <label>🔍 नाम / बिल नं. / मोबाइल से खोजें</label>
+                <input type="text" id="billSearchInput" class="form-control" placeholder="Search customer or SCW-..." oninput="renderBillsTable()" />
+              </div>
+              <div class="form-group">
+                <label>📌 पेमेंट स्टेटस फ़िल्टर</label>
+                <select id="filterStatusSelect" class="form-control" onchange="renderBillsTable()">
+                  <option value="ALL">सभी बिल (All Bills)</option>
+                  <option value="PAID">केवल Paid (पूरा जमा)</option>
+                  <option value="DUE">केवल Due (बकाया बिल)</option>
+                </select>
               </div>
               <div class="form-group">
                 <label>📅 किस तारीख से (From Date)</label>
@@ -438,10 +469,11 @@
                     <th>Bill No</th>
                     <th>Date</th>
                     <th>Customer</th>
+                    <th>Items Summary</th>
                     <th>Payment</th>
                     <th>Total</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody id="allBillsBody"></tbody>
@@ -452,11 +484,15 @@
 
         <!-- 5. SAVED CUSTOMERS TAB -->
         <div id="tab-customers" class="tab-panel no-print">
-          <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-              <h2>👥 सेव किए गए स्थायी ग्राहक (Permanent Customer Directory)</h2>
-              <button class="btn btn-excel" onclick="exportCustomersExcel()">📥 Export Customers to Excel</button>
+          <div class="module-banner banner-customers">
+            <div>
+              <h2>👥 स्थायी ग्राहक डायरेक्टरी (Saved Customers)</h2>
+              <p style="font-size: 0.88rem; opacity: 0.9;">बिल बनते ही ऑटो-सेव होने वाले सभी ग्राहकों का रिकॉर्ड</p>
             </div>
+            <button class="btn btn-excel btn-sm" onclick="exportCustomersExcel()">📥 Export Customers to Excel</button>
+          </div>
+
+          <div class="card">
             <div class="form-group" style="max-width: 400px;">
               <input type="text" id="custSearchInput" class="form-control" placeholder="नाम, मोबाइल या पते से खोजें..." oninput="renderCustomersTable()" />
             </div>
@@ -480,12 +516,15 @@
 
         <!-- 6. REPAIRING JOB SHEET TAB -->
         <div id="tab-repairs" class="tab-panel no-print">
-          <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-              <h2>🔧 रिपेयरिंग जॉब शीट (Repair Tracker)</h2>
-              <button class="btn btn-excel" onclick="exportRepairsExcel()">📥 Export Jobs to Excel</button>
+          <div class="module-banner banner-repairs">
+            <div>
+              <h2>🔧 रिपेयरिंग वर्कशॉप ट्रैकर (Repair Job Sheet)</h2>
+              <p style="font-size: 0.88rem; opacity: 0.9;">रिपेयरिंग के लिए आए लैपटॉप व कंप्यूटर का लाइव स्टेटस और 1-क्लिक बिलिंग</p>
             </div>
+            <button class="btn btn-excel btn-sm" onclick="exportRepairsExcel()">📥 Export Jobs to Excel</button>
+          </div>
 
+          <div class="card">
             <form onsubmit="addRepairJob(event)" class="grid-3" style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
               <div class="form-group"><input type="text" id="repCustName" class="form-control" placeholder="ग्राहक का नाम*" required /></div>
               <div class="form-group"><input type="text" id="repCustPhone" class="form-control" placeholder="मोबाइल नंबर*" required /></div>
@@ -513,19 +552,26 @@
           </div>
         </div>
 
-        <!-- 7. STOCK & RATE LIST TAB -->
+        <!-- 7. STOCK & RATE LIST TAB (WITH EDIT OPTION) -->
         <div id="tab-stock" class="tab-panel no-print">
-          <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-              <h2>📦 सामान व सर्विस रेट लिस्ट (Auto-Updated Rate List)</h2>
-              <button class="btn btn-excel" onclick="exportStockExcel()">📥 Export Rate List to Excel</button>
+          <div class="module-banner banner-stock">
+            <div>
+              <h2>📦 सामान व सर्विस रेट लिस्ट (Editable Catalog)</h2>
+              <p style="font-size: 0.88rem; opacity: 0.9;">नया आइटम जोड़ें या किसी भी पुराने आइटम का नाम, रेट और वारंटी Edit करें</p>
             </div>
+            <button class="btn btn-excel btn-sm" onclick="exportStockExcel()">📥 Export Rate List to Excel</button>
+          </div>
 
-            <form onsubmit="addStockItem(event)" class="grid-4" style="margin-bottom: 1.5rem;">
+          <div class="card">
+            <form id="stockForm" onsubmit="saveStockItem(event)" class="grid-4" style="margin-bottom: 1.5rem;">
+              <input type="hidden" id="stkEditIndex" value="-1" />
               <input type="text" id="stkName" class="form-control" placeholder="सामान / सर्विस का नाम*" required />
               <input type="number" id="stkRate" class="form-control" placeholder="रेट (Rate ₹)*" required />
               <input type="text" id="stkWarranty" class="form-control" placeholder="वारंटी (जैसे: 1 Year)" />
-              <button type="submit" class="btn btn-primary">+ रेट लिस्ट में जोड़ें</button>
+              <div style="display: flex; gap: 6px;">
+                <button type="submit" id="stkSubmitBtn" class="btn btn-primary" style="flex:1;">+ रेट लिस्ट में जोड़ें</button>
+                <button type="button" id="stkCancelEditBtn" class="btn btn-danger" style="display:none;" onclick="cancelStockEdit()">✕</button>
+              </div>
             </form>
 
             <div class="table-responsive">
@@ -536,7 +582,7 @@
                     <th>सामान / सर्विस का नाम</th>
                     <th>रेट (Rate ₹)</th>
                     <th>वारंटी</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody id="stockBody"></tbody>
@@ -545,13 +591,17 @@
           </div>
         </div>
 
-        <!-- 8. DUE / UDHAAR KHATA TAB -->
+        <!-- 8. DUE / UDHAAR KHATA TAB (WITH 1-CLICK WHATSAPP REMINDER) -->
         <div id="tab-due" class="tab-panel no-print">
-          <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-              <h2>💰 बकाया खाता (Due / Udhaar Khata)</h2>
-              <button class="btn btn-excel" onclick="exportDueExcel()">📥 Export Due List to Excel</button>
+          <div class="module-banner banner-due">
+            <div>
+              <h2>💰 बकाया खाता एवं WhatsApp रिमाइंडर (Due Recovery Center)</h2>
+              <p style="font-size: 0.88rem; opacity: 0.9;">ग्राहक को 1-क्लिक में बकाया का WhatsApp रिमाइंडर भेजें या भुगतान जमा करें</p>
             </div>
+            <button class="btn btn-excel btn-sm" onclick="exportDueExcel()">📥 Export Due List to Excel</button>
+          </div>
+
+          <div class="card">
             <div class="table-responsive">
               <table class="data-table">
                 <thead>
@@ -561,7 +611,7 @@
                     <th>Total Bill</th>
                     <th>Paid</th>
                     <th>Balance Due</th>
-                    <th>Action</th>
+                    <th>Actions (WhatsApp Reminder &amp; Clear)</th>
                   </tr>
                 </thead>
                 <tbody id="dueBody"></tbody>
@@ -570,12 +620,12 @@
           </div>
         </div>
 
-        <!-- 9. HIGH-TECH SUPER ADMIN COMMAND CENTER HUB -->
+        <!-- 9. SUPER ADMIN COMMAND CENTER HUB -->
         <div id="tab-superadmin" class="tab-panel no-print">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+          <div class="module-banner banner-admin">
             <div>
               <h2>🛡️ Super Admin Command Center</h2>
-              <p style="color: var(--muted); font-size: 0.9rem;">नए यूज़र व पासवर्ड बनाएं, सोशल मीडिया लिंक बदलें, और सिस्टम डेटा कंट्रोल करें</p>
+              <p style="font-size: 0.88rem; opacity: 0.9;">नए यूज़र बनाएं, Google Maps लोकेशन व रिव्यू लिंक सेट करें, और सोशल मीडिया कंट्रोल करें</p>
             </div>
             <button class="btn btn-excel btn-sm" onclick="exportFullSystemBackup()">💾 Full System Backup (JSON)</button>
           </div>
@@ -611,10 +661,18 @@
               </form>
             </div>
 
-            <!-- Social Media & Shop Identity Control -->
+            <!-- Google Maps Location, Reviews & Social Media Control -->
             <div class="card" style="border-top: 4px solid #16a34a;">
-              <h3>🌐 वेबसाइट सोशल लिंक व शॉप सेटिंग्स</h3>
+              <h3>📍 Google Maps लोकेशन, Reviews और सोशल लिंक सेटिंग्स</h3>
               <form onsubmit="saveSocialLinks(event)">
+                <div class="form-group">
+                  <label>🗺️ Google Maps Shop Location URL (दुकान का मैप लिंक)</label>
+                  <input type="url" id="adminGmapsUrl" class="form-control" placeholder="https://maps.app.goo.gl/..." />
+                </div>
+                <div class="form-group">
+                  <label>⭐ Google Ratings &amp; Review Link (रिव्यू देने व पढ़ने का लिंक)</label>
+                  <input type="url" id="adminGreviewUrl" class="form-control" placeholder="https://g.page/r/.../review" />
+                </div>
                 <div class="form-group">
                   <label>📘 Facebook Profile / Page URL</label>
                   <input type="url" id="adminFbUrl" class="form-control" placeholder="https://facebook.com/sandeepcomputerworld" />
@@ -627,7 +685,7 @@
                   <label>🏛️ डिफ़ॉल्ट Shop GSTIN (वैकल्पिक)</label>
                   <input type="text" id="adminDefaultGstin" class="form-control" placeholder="GSTIN नंबर यहाँ सेव रखें" />
                 </div>
-                <button type="submit" class="btn btn-whatsapp" style="width: 100%;">💾 Save All Website Settings</button>
+                <button type="submit" class="btn btn-whatsapp" style="width: 100%;">💾 Save All Website &amp; Maps Settings</button>
               </form>
             </div>
           </div>
